@@ -1,0 +1,47 @@
+﻿@model IEnumerable<FilmStore.Models.Film>
+@{ 
+  ViewData["Title"] = "Films";
+}
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Film Store</title>
+</head>
+
+<body>
+  <h3>Films:</h3>
+  <table class="table-bordered">
+    <tr>
+      <td>Name</td>
+      <td>Producer</td>
+      <td>Category</td>
+      <td>Year</td>
+      <td>Country</td>
+      <td>Rate</td>
+      <td>Price</td>
+    </tr>
+    @foreach (var film in Model)
+    {
+  <tr>
+    <td>@film.Name</td>
+    <td><a href="~/Home/Producers/@film.Producer.Id">@film.Producer.Name</a></td>
+    <td>@foreach (var category in film.Categories)
+    {
+      <a href="~/Home/Categories/@category.CategoryId">@category.Category.Name</a>
+    }
+    </td>
+    <td>@film.Year</td>
+    <td>@foreach (var country in film.Countries)
+	{
+		 <a href="~/Home/Countries/@country.CountryId">@country.Country.Name</a>
+	}
+    </td>
+    <td>@film.Rate</td>
+    <td>@film.Price</td>
+    <td><a href="~/Home/Buy/@film.Id">Buy</a></td>
+  </tr>
+    }
+  </table>
+</body>
+
+</html>
