@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using FilmStore.Models;
 using Microsoft.Extensions.DependencyInjection;
@@ -58,6 +55,7 @@ namespace FilmStore
         context.Producers.AddRange(p1, p2);
         context.Categories.AddRange(cat1, cat2, cat3);
         context.SaveChanges();
+
         Film film1 = new Film() { Name = "Lock, Stock and Two Smoking Barrels",
                                   Countries = new List<FilmCountry>(),
                                   Categories = new List<FilmCategory>(),

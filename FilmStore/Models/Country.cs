@@ -10,13 +10,4 @@ namespace FilmStore.Models
     public string Name { get; set; }
     public virtual List<FilmCountry> Films { get; set; }
   }
-
-  public class FilmCountry
-  {
-    public int CountryId { get; set; }
-    public virtual Country Country { get; set; }
-
-    public int FilmId { get; set; }
-    public virtual Film Film { get; set; }
-  }
 }
