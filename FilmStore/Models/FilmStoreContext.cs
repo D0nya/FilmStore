@@ -7,7 +7,7 @@ namespace FilmStore.Models
     public DbSet<Film> Films { get; set; }
     public DbSet<Country> Countries { get; set; }
     public DbSet<Producer> Producers { get; set; }
-    public DbSet<Category> Categories { get; set; }
+    public DbSet<Genre> Genres { get; set; }
     public DbSet<Customer> Customers { get; set; }
     public DbSet<Purchase> Purchases { get; set; }
 
@@ -18,11 +18,14 @@ namespace FilmStore.Models
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-      modelBuilder.Entity<FilmCategory>()
-        .HasKey(k => new { k.CategoryId, k.FilmId });
+      modelBuilder.Entity<FilmGenre>()
+        .HasKey(k => new { k.GenreId, k.FilmId });
 
       modelBuilder.Entity<FilmCountry>()
         .HasKey(k => new { k.CountryId, k.FilmId });
+
+      modelBuilder.Entity<FilmPurchase>()
+        .HasKey(k => new { k.FilmId, k.PurchaseId });
     }
   }
 }
