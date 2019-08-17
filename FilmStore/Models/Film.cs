@@ -11,8 +11,9 @@ namespace FilmStore.Models
     public string Year { get; set; }
     public decimal Price { get; set; }
     public float Rate { get; set; }
-    public virtual List<FilmCountry> Countries { get; set; }
     public virtual Producer Producer { get; set; }
-    public virtual List<FilmCategory> Categories { get; set; }
+    public virtual List<FilmCountry> Countries { get; set; }
+    public virtual List<FilmGenre> Genres { get; set; }
+    public virtual List<FilmPurchase> Purchases { get; set; }
   }
 }
