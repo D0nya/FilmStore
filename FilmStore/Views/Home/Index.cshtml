@@ -14,7 +14,7 @@
     <tr>
       <td>Name</td>
       <td>Producer</td>
-      <td>Category</td>
+      <td>Genre</td>
       <td>Year</td>
       <td>Country</td>
       <td>Rate</td>
@@ -25,9 +25,9 @@
   <tr>
     <td>@film.Name</td>
     <td><a href="~/Home/Producers/@film.Producer.Id">@film.Producer.Name</a></td>
-    <td>@foreach (var category in film.Categories)
+    <td>@foreach (var genre in film.Genres)
     {
-      <a href="~/Home/Categories/@category.CategoryId">@category.Category.Name</a>
+      <a href="~/Home/Genres/@genre.GenreId">@genre.Genre.Name</a><br />
     }
     </td>
     <td>@film.Year</td>

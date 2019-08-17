@@ -1,0 +1,26 @@
+﻿@model IEnumerable<FilmStore.Models.Purchase>
+
+@{
+    ViewData["Title"] = "Purchases";
+}
+
+<h1>Your purchases</h1>
+
+<table class="table">
+  <tr>
+    <td>Films</td>
+    <td>Price</td>
+    <td>Date</td>
+  </tr>
+  @foreach (Purchase purchase in Model)
+  {
+    <tr>
+      <td>@foreach (var film in purchase.Films)
+      {
+        <a href="~/Home/Films/@film.FilmId">@film.Film.Name</a><br/>
+      }</td>
+      <td>@purchase.Sum()</td>
+      <td>@purchase.Date</td>
+    </tr>
+  }
+</table>
