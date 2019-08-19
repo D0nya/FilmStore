@@ -1,8 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace FilmStore.Models
 {
-  public class FilmStoreContext : DbContext
+  public class FilmStoreContext : IdentityDbContext<User>
   {
     public DbSet<Film> Films { get; set; }
     public DbSet<Country> Countries { get; set; }
@@ -18,6 +19,7 @@ namespace FilmStore.Models
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+      base.OnModelCreating(modelBuilder);
       modelBuilder.Entity<FilmGenre>()
         .HasKey(k => new { k.GenreId, k.FilmId });
 
@@ -26,6 +28,11 @@ namespace FilmStore.Models
 
       modelBuilder.Entity<FilmPurchase>()
         .HasKey(k => new { k.FilmId, k.PurchaseId });
+
+      modelBuilder.Entity<User>()
+        .HasOne(user => user.Customer)
+        .WithOne(customer => customer.User)
+        .HasForeignKey<Customer>(customer => customer.UserRef);
     }
   }
 }

@@ -8,8 +8,8 @@ namespace FilmStore.Models
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
     public string Name { get; set; }
-    public string Email { get; set; }
-    public string Password { get; set; }
+    public string UserRef { get; set; }
+    public virtual User User { get; set; }
     public virtual List<Purchase> Purchases { get; set; }
   }
 }

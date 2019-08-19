@@ -1,6 +1,10 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using FilmStore.Areas.Identity;
+using FilmStore.Models;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -30,7 +34,26 @@ namespace FilmStore
       string connection = Configuration.GetConnectionString("DefaultConnection");
       services.AddDbContext<Models.FilmStoreContext>(options => options.UseLazyLoadingProxies().UseSqlServer(connection));
 
-      services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+      services.AddIdentity<User, IdentityRole>()
+        .AddEntityFrameworkStores<FilmStoreContext>()
+        .AddDefaultTokenProviders();
+
+      services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+        .AddRazorPagesOptions(options =>
+        {
+          options.AllowAreas = true;
+          options.Conventions.AuthorizeAreaFolder("Identity", "/Account/Manage");
+          options.Conventions.AuthorizeAreaPage("Identity", "/Account/Logout");
+        });
+
+      services.ConfigureApplicationCookie(options =>
+      {
+        options.LoginPath = $"/Identity/Account/Login";
+        options.LogoutPath = $"/Identity/Account/Logout";
+        options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
+      });
+
+      services.AddSingleton<IEmailSender, EmailSender>();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -49,6 +72,7 @@ namespace FilmStore
 
       app.UseHttpsRedirection();
       app.UseStaticFiles();
+      app.UseAuthentication();  
       app.UseCookiePolicy();
 
       app.UseMvc(routes =>
