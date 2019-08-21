@@ -1,4 +1,5 @@
 ﻿using FilmStore.Areas.Identity;
+using FilmStore.Controllers;
 using FilmStore.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -9,6 +10,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Threading.Tasks;
+using System.Linq;
 
 namespace FilmStore
 {
@@ -32,7 +36,7 @@ namespace FilmStore
       });
 
       string connection = Configuration.GetConnectionString("DefaultConnection");
-      services.AddDbContext<Models.FilmStoreContext>(options => options.UseLazyLoadingProxies().UseSqlServer(connection));
+      services.AddDbContext<FilmStoreContext>(options => options.UseLazyLoadingProxies().UseSqlServer(connection));
 
       services.AddIdentity<User, IdentityRole>()
         .AddEntityFrameworkStores<FilmStoreContext>()
@@ -57,7 +61,7 @@ namespace FilmStore
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+    public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider services)
     {
       if (env.IsDevelopment())
       {
@@ -72,7 +76,7 @@ namespace FilmStore
 
       app.UseHttpsRedirection();
       app.UseStaticFiles();
-      app.UseAuthentication();  
+      app.UseAuthentication();
       app.UseCookiePolicy();
 
       app.UseMvc(routes =>
@@ -81,6 +85,20 @@ namespace FilmStore
                   name: "default",
                   template: "{controller=Home}/{action=Index}/{id?}");
       });
+
+      CreateUserRole(services, "admin").Wait();
+      CreateUserRole(services, "user").Wait();
+    }
+
+    private async Task CreateUserRole(IServiceProvider services, string roleName)
+    {
+      var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+      var userManager = services.GetRequiredService<UserManager<User>>();
+
+      if(!await roleManager.RoleExistsAsync(roleName))
+      {
+        await roleManager.CreateAsync(new IdentityRole(roleName));
+      }
     }
   }
 }
