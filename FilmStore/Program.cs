@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
 using FilmStore.Models;
 using Microsoft.Extensions.DependencyInjection;
+using FilmStore.Controllers;
+using Microsoft.AspNetCore.Identity;
 
 namespace FilmStore
 {
