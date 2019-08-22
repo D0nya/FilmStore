@@ -3,8 +3,6 @@ using System.Diagnostics;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using FilmStore.Models;
-using System;
-using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace FilmStore.Controllers
 {
@@ -25,20 +23,6 @@ namespace FilmStore.Controllers
     public IActionResult Index()
     {
       return View(films.ToList());
-    }
-
-    public IActionResult Login()
-    {
-      return Redirect("~/Identity/Account/Login");
-    }
-    public IActionResult LogOut()
-    {
-      if (HttpContext.User.Identity.IsAuthenticated)
-      {
-        return Redirect("~/Identity/Account/Logout");
-      } else {
-        return RedirectToAction("Index", "Home");
-      }
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
