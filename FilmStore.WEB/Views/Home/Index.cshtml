@@ -1,0 +1,47 @@
+﻿@model IEnumerable<FilmViewModel>
+@{ 
+  ViewData["Title"] = "Films";
+}
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Film Store</title>
+</head>
+
+<body>
+  <h3>Films:</h3>
+  <table class="table-bordered">
+    <tr>
+      <td>Name</td>
+      <td>Producer</td>
+      <td>Genre</td>
+      <td>Year</td>
+      <td>Country</td>
+      <td>Rate</td>
+      <td>Price</td>
+    </tr>
+    @foreach (var film in Model)
+    {
+  <tr>
+    <td>@film.Name</td>
+    <td><a href="~/Home/Producers/@film.Producer.Id">@film.Producer.Name</a></td>
+    <td>@foreach (var genre in film.Genres)
+    {
+      <a href="~/Home/Genres/@genre.Id">@genre.Name</a><br />
+    }
+    </td>
+    <td>@film.Year</td>
+    <td>@foreach (var country in film.Countries)
+	{
+		 <a href="~/Home/Countries/@country.Id">@country.Name</a>
+	}
+    </td>
+    <td>@film.Rate</td>
+    <td>@film.Price $</td>
+    <td><a href="~/Home/Buy/@film.Id">Buy</a></td>
+  </tr>
+    }
+  </table>
+</body>
+
+</html>
