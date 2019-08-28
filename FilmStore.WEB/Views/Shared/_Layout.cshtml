@@ -37,10 +37,15 @@
           </ul>
         </div>
 
+        @if (!Context.User.Identity.IsAuthenticated)
+        {
+          <a class="nav-link text-dark" asp-area="" asp-controller="Log" asp-action="Register">Register</a>
+        }
+
         <a class="nav-link text-dark" asp-area="" asp-controller="Log" asp-action="Login">LogIn</a>
-        <a class="nav-link text-dark" asp-area="" asp-controller="Log" asp-action="Logout">LogOut</a>
         @if (Context.User.Identity.IsAuthenticated)
         {
+          <a class="nav-link text-dark" asp-area="" asp-controller="Log" asp-action="Logout">LogOut</a>
           <label class="navbar-text">Hello, @Context.User.Identity.Name</label>
         }
       </div>
