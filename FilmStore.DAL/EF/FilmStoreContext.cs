@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using FilmStore.DBL.Entities;
+using FilmStore.DAL.Entities;
 
-namespace FilmStore.DBL.EF
+namespace FilmStore.DAL.EF
 {
   public class FilmStoreContext : IdentityDbContext<User> 
   {

@@ -1,7 +1,7 @@
 ﻿using FilmStore.BLL.DTO;
 using FilmStore.BLL.Interfaces;
+using FilmStore.DAL.Entities;
 using FilmStore.DAL.Interfaces;
-using FilmStore.DBL.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;

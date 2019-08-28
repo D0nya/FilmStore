@@ -1,6 +1,6 @@
 ﻿using FilmStore.DAL.Interfaces;
-using FilmStore.DBL.EF;
-using FilmStore.DBL.Entities;
+using FilmStore.DAL.EF;
+using FilmStore.DAL.Entities;
 
 namespace FilmStore.DAL.Repositories
 {

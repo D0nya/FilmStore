@@ -1,6 +1,6 @@
 ﻿using FilmStore.DAL.Interfaces;
-using FilmStore.DBL.EF;
-using FilmStore.DBL.Entities;
+using FilmStore.DAL.EF;
+using FilmStore.DAL.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +9,7 @@ namespace FilmStore.DAL.Repositories
 {
   class UserRepository : IRepository<User>
   {
-    private FilmStoreContext db;
+    private readonly FilmStoreContext db;
     public UserRepository(FilmStoreContext context)
     {
       db = context;

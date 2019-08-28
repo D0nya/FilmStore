@@ -1,16 +1,16 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
-using FilmStore.DBL.Entities;
+using FilmStore.DAL.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace FilmStore.Areas.Identity.Pages.Account
+namespace FilmStore.WEB.Areas.Identity.Pages.Account
 {
-    [AllowAnonymous]
+  [AllowAnonymous]
     public class ForgotPasswordModel : PageModel
     {
         private readonly UserManager<User> _userManager;

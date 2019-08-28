@@ -1,16 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using FilmStore.DBL.Entities;
+using FilmStore.DAL.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace FilmStore.Areas.Identity.Pages.Account
+namespace FilmStore.WEB.Areas.Identity.Pages.Account
 {
-    [AllowAnonymous]
+  [AllowAnonymous]
     public class ConfirmEmailModel : PageModel
     {
         private readonly UserManager<User> _userManager;

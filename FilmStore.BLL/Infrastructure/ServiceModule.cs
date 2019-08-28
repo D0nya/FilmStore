@@ -1,10 +1,10 @@
 ﻿using System;
 using FilmStore.BLL.Interfaces;
 using FilmStore.BLL.Services;
+using FilmStore.DAL.EF;
+using FilmStore.DAL.Entities;
 using FilmStore.DAL.Interfaces;
 using FilmStore.DAL.Repositories;
-using FilmStore.DBL.EF;
-using FilmStore.DBL.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;

@@ -1,4 +1,4 @@
-﻿namespace FilmStore.DBL.Entities
+﻿namespace FilmStore.DAL.Entities
 {
   public class FilmCountry
   {

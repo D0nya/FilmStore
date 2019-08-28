@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using FilmStore.DBL.Entities;
+using FilmStore.DAL.Entities;
 
-namespace FilmStore.Areas.Identity.Pages.Account
+namespace FilmStore.WEB.Areas.Identity.Pages.Account
 {
   [AllowAnonymous]
     public class ResetPasswordModel : PageModel

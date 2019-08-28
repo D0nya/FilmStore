@@ -1,4 +1,4 @@
-﻿using FilmStore.DBL.Entities;
+﻿using FilmStore.DAL.Entities;
 using System;
 using System.Collections.Generic;
 using System.Text;

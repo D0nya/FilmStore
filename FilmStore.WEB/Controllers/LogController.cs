@@ -19,5 +19,9 @@ namespace FilmStore.WEB.Controllers
         return RedirectToAction("Index", "Home");
       }
     }
+    public IActionResult Register()
+    {
+      return Redirect("~/Identity/Account/Register");
+    }
   }
 }

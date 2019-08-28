@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-
-namespace FilmStore.BLL.DTO
+﻿namespace FilmStore.BLL.DTO
 {
   public class UserDTO
   {

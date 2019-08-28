@@ -1,4 +1,4 @@
-﻿using FilmStore.DBL.Entities;
+﻿using FilmStore.DAL.Entities;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Threading.Tasks;
@@ -16,7 +16,6 @@ namespace FilmStore.DAL.Interfaces
     IRepository<User> Users { get; }
 
     IClientManager ClientManager { get; }
-    //ApplicationUserManager UserManager { get; }
     UserManager<User> UserManager { get; }
     RoleManager<IdentityRole> RoleManager { get; }
     SignInManager<User> SignInManager { get; }

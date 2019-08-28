@@ -1,16 +1,15 @@
 ﻿using FilmStore.DAL.Interfaces;
-using FilmStore.DBL.EF;
-using FilmStore.DBL.Entities;
+using FilmStore.DAL.EF;
+using FilmStore.DAL.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace FilmStore.DAL.Repositories
 {
   class CountryRepository : IRepository<Country>
   {
-    private FilmStoreContext db;
+    private readonly FilmStoreContext db;
     public CountryRepository(FilmStoreContext context)
     {
       db = context;

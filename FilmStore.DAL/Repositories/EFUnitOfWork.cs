@@ -1,6 +1,6 @@
 ﻿using FilmStore.DAL.Interfaces;
-using FilmStore.DBL.EF;
-using FilmStore.DBL.Entities;
+using FilmStore.DAL.EF;
+using FilmStore.DAL.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -10,7 +10,7 @@ namespace FilmStore.DAL.Repositories
 {
   public class EFUnitOfWork : IUnitOfWork
   {
-    private FilmStoreContext db;
+    private readonly FilmStoreContext db;
 
     private CountryRepository  countryRepository;
     private CustomerRepository customerRepository;
@@ -20,10 +20,10 @@ namespace FilmStore.DAL.Repositories
     private PurchaseRepository purchaseRepository;
     private UserRepository userRepository;
 
-    private IClientManager clientManager;
-    private UserManager<User> userManager;
-    private RoleManager<IdentityRole> roleManager;
-    private SignInManager<User> signInManager;
+    private readonly IClientManager clientManager;
+    private readonly UserManager<User> userManager;
+    private readonly RoleManager<IdentityRole> roleManager;
+    private readonly SignInManager<User> signInManager;
 
     public EFUnitOfWork(DbContextOptions options, UserManager<User> userManager, RoleManager<IdentityRole> roleManager, SignInManager<User> signInManager)
     {
@@ -122,6 +122,7 @@ namespace FilmStore.DAL.Repositories
     public void Dispose()
     {
       Dispose(true);
+      clientManager.Dispose();
       GC.SuppressFinalize(true);
     }
   }

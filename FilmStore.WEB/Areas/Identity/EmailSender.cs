@@ -3,7 +3,7 @@ using MimeKit;
 using MailKit.Net.Smtp;
 using System.Threading.Tasks;
 
-namespace FilmStore.Areas.Identity
+namespace FilmStore.WEB.Areas.Identity
 {
   public class EmailSender : IEmailSender
   {

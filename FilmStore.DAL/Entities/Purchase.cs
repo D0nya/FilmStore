@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace FilmStore.DBL.Entities
+namespace FilmStore.DAL.Entities
 {
   public class Purchase
   {
