@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using FilmStore.BLL.DTO;
+using FilmStore.BLL.Infrastructure;
 using FilmStore.BLL.Interfaces;
 using FilmStore.DAL.Entities;
 using FilmStore.DAL.Interfaces;
@@ -18,31 +19,18 @@ namespace FilmStore.BLL.Services
 
     public FilmDTO GetFilm(int id)
     {
-      //var film = Database.Films.Get(id);
-      //if (film == null)
-      //  throw new ValidationException("Film not found", "");
-      //FilmDTO res = new FilmDTO { Id = film.Id, Name = film.Name, Price = film.Price, Rate = film.Rate, Year = film.Year };
-      //res.Producer = new ProducerDTO { Id = film.Producer.Id, Name = film.Producer.Name };
-      //foreach (var item in film.Producer.Films)
-      //{
-      //  res.Producer.Films.Add(item.Id); 
-      //}
-      //foreach (var item in film.Countries)
-      //{
-      //  res.Countries.Add(item.CountryId);
-      //}
-      //foreach (var item in film.Genres)
-      //{
-      //  res.Genres.Add(item.GenreId);
-      //}
-      //foreach (var item in film.Purchases)
-      //{
-      //  res.Purchases.Add(item.PurchaseId);
-      //}
-
-      return new FilmDTO() { Id = 999};
+      var film = Database.Films.Get(id);
+      if (film == null)
+        throw new ValidationException("Film not found", $"Id: {id}");
+      var mapper = FilmToFilmDTOMapper();
+      return mapper.Map<Film, FilmDTO>(film);
     }
     public IEnumerable<FilmDTO> GetFilms()
+    {
+      var mapper = FilmToFilmDTOMapper();
+      return mapper.Map<IEnumerable<Film>, List<FilmDTO>>(Database.Films.GetAll()); 
+    }
+    private IMapper FilmToFilmDTOMapper()
     {
       var mapper = new MapperConfiguration(cfg =>
       {
@@ -75,7 +63,7 @@ namespace FilmStore.BLL.Services
         .ForMember(dst => dst.Genres, opt => opt.MapFrom(src => src.Genres.Select(g => g.Genre).ToList()))
         .ForMember(dst => dst.Purchases, opt => opt.MapFrom(src => src.Purchases.Select(p => p.Purchase).ToList()));
       }).CreateMapper();
-      return mapper.Map<IEnumerable<Film>, List<FilmDTO>>(Database.Films.GetAll()); 
+      return mapper;
     }
     public void Dispose()
     {

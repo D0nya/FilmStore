@@ -1,11 +1,11 @@
-﻿using FilmStore.BLL.DTO;
+﻿using AutoMapper;
+using FilmStore.BLL.DTO;
 using FilmStore.BLL.Interfaces;
 using FilmStore.DAL.Entities;
 using FilmStore.DAL.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace FilmStore.BLL.Services
@@ -54,17 +54,46 @@ namespace FilmStore.BLL.Services
       }
     }
 
-    public Task<ClaimsIdentity> Authenticate(UserDTO userDto)
-    {
-      throw new KeyNotFoundException();
-    }
-
     public async Task<string> GetUserIdAsync(UserDTO userDTO)
     {
       User user = await Database.UserManager.FindByEmailAsync(userDTO.Email);
       if (user == null)
         return null;
       return user.Id;
+    }
+
+    public async Task<OperationDetails> EditUserAsync(UserDTO userDTO)
+    {
+      User user = await Database.UserManager.FindByNameAsync(userDTO.Name);
+      if(user != null)
+      {
+        user.UserName = userDTO.UserName;
+        user.Customer.Name = userDTO.UserName;
+        user.Customer.FirstName = userDTO.Customer.FirstName;
+        user.Customer.LastName = userDTO.Customer.LastName;
+        user.Customer.BirthDay = userDTO.Customer.BirthDay;
+        var res = await Database.UserManager.UpdateAsync(user);
+        if (res.Errors.Count() > 0)
+          return new OperationDetails(false, res.Errors.FirstOrDefault().Description, "Value");
+        return new OperationDetails(true, "Success!", "");
+      }
+      else
+      {
+        return new OperationDetails(false, "User not found.", "UserName");
+      }
+    }
+
+    public async Task<UserDTO> GetUserByNameAsync(string userName)
+    {
+      var user = await Database.UserManager.FindByNameAsync(userName);
+      var mapper = new MapperConfiguration(cfg =>
+      {
+        cfg.CreateMap<Customer, CustomerDTO>()
+        .ForMember(src => src.User, opt => opt.Ignore())
+        .ForMember(src => src.Purchases, opt => opt.Ignore());
+        cfg.CreateMap<User, UserDTO>();
+      }).CreateMapper();
+      return mapper.Map<User, UserDTO>(user);
     }
   }
 }

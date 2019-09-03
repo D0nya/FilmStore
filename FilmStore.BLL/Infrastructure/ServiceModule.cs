@@ -27,6 +27,7 @@ namespace FilmStore.BLL.Infrastructure
       Services.AddScoped<IUnitOfWork, EFUnitOfWork>();
       Services.AddScoped<IOrderService, OrderService>();
       Services.AddScoped<IUserService, UserService>();
+      Services.AddScoped<IAdminService, AdminService>();
       Provider = Services.BuildServiceProvider();
     }
   }
