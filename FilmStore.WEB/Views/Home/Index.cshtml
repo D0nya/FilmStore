@@ -38,7 +38,7 @@
     </td>
     <td>@film.Rate</td>
     <td>@film.Price $</td>
-    <td><a href="~/Home/Buy/@film.Id">Buy</a></td>
+    <td><a asp-action="AddToCart" asp-controller="Cart" asp-route-id="@film.Id" asp-route-returnUrl="@Context.Request.Host@Context.Request.Path">Buy</a></td>
   </tr>
     }
   </table>

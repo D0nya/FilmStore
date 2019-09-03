@@ -1,0 +1,23 @@
+﻿@model IEnumerable<FilmViewModel>
+@{
+  ViewBag.Title = "Cart";
+  @using Microsoft.AspNetCore.Http
+  @inject IHttpContextAccessor HttpContextAccessor
+}
+
+@if(Context.Session.GetInt32("CartCount") == null || Context.Session.GetInt32("CartCount") == 0)
+{
+  <h4>You don't have any films in cart. Add some: <a asp-action="Index" asp-controller="Home">here</a></h4>
+}
+
+@{ decimal sum = 0;}
+@foreach (var item in Model)
+{
+  @item.Name   @item.Producer.Name   @item.Year   @item.Rate   @item.Price<br />
+  sum += item.Price;
+}
+<h4><b>Sum: @sum</b></h4>
+
+@section Scripts {
+  @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,6 +1,8 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
+  @using Microsoft.AspNetCore.Http
+  @inject IHttpContextAccessor HttpContextAccessor
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>@ViewData["Title"] - FilmStore</title>
@@ -59,6 +61,7 @@
           }
           <label class="navbar-text">Hello, @Context.User.Identity.Name</label>
         }
+          <a class="nav-link text-dark"  asp-area="" asp-controller="Cart" asp-action="Cart">Cart @Context.Session.GetInt32("CartCount")</a>
       </div>
     </nav>
   </header>

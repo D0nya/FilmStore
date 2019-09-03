@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace FilmStore.WEB
 {
@@ -56,6 +57,12 @@ namespace FilmStore.WEB
         options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
       });
 
+      services.AddDistributedMemoryCache();
+      services.AddSession(options => 
+      {
+        options.IdleTimeout = TimeSpan.FromMinutes(120);
+      });
+
       services.AddSingleton<IEmailSender, EmailSender>();
     }
 
@@ -73,9 +80,11 @@ namespace FilmStore.WEB
         app.UseHsts();
       }
 
+
       app.UseHttpsRedirection();
       app.UseStaticFiles();
       app.UseAuthentication();
+      app.UseSession();
       app.UseCookiePolicy();
 
       app.UseMvc(routes =>
