@@ -1,0 +1,63 @@
+﻿@model FilmStore.WEB.Models.FilmViewModel
+@{
+  ViewBag.Title = "Admin panel : Edit";
+}
+
+<div class="panel">
+  <div class="panel-heading">
+    <h2>Editing "@Model.Name"</h2>
+  </div>
+
+  <div class="panel-body">
+    <form asp-action="Edit">
+      <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="Purchases" />
+
+        <div class="form-group">
+          <label asp-for="Name" class="col-form-label"></label>
+          <input asp-for="Name" class="form-control" />
+          <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+          <label asp-for="Producer" class="col-form-label"></label>
+          <select asp-for="ProducerId" asp-items="@ViewBag.Producers" class="custom-select"></select>
+        </div>
+        <div class="form-group">
+          <label asp-for="Countries" class="col-form-label"></label>
+          <select asp-for="CountriesId" asp-items="@ViewBag.Countries" class="custom-select" multiple></select>
+        </div>
+        <div class="form-group">
+          <label asp-for="Genres" class="col-form-label"></label>
+          <select asp-for="GenresId" asp-items="@ViewBag.Genres" class="custom-select" multiple></select>
+        </div>
+        <div class="form-group">
+          <label asp-for="Year" class="col-form-label"></label>
+          <input asp-for="Year" class="form-control" />
+          <span asp-validation-for="Year" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+          <label asp-for="Price" class="col-form-label"></label>
+          <input asp-for="Price" class="form-control" />
+          <span asp-validation-for="Price" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+          <label asp-for="Rate" class="col-form-label"></label>
+          <input asp-for="Rate" class="form-control" />
+          <span asp-validation-for="Rate" class="text-danger"></span>
+        </div>
+
+      <div class="form-group">
+        <input type="submit" value="Save" class="btn btn-primary" />
+      </div>
+    </form>
+  </div>
+
+  <div class="panel-footer">
+    <a asp-action="Admin" class="btn btn-secondary">Cancel</a> 
+  </div>
+</div>
+
+@section Scripts {
+  @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
