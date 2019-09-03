@@ -1,0 +1,34 @@
+﻿@model FilmViewModel
+@{
+  ViewBag.Title = Model.Name;
+}
+<div>
+  <h2>@Model.Name</h2>
+  
+  <b><label asp-for="Producer"></label></b>
+  <p>@Model.Producer.Name</p>
+  
+  <b><label asp-for="Year"></label></b>
+  <p>@Model.Year</p>
+  
+  <b><label asp-for="Genres"></label></b>
+  @foreach (var genre in Model.Genres)
+  {
+    <p>@genre.Name</p>
+  }
+
+  <b><label asp-for="Countries"></label></b>
+  @foreach (var country in Model.Countries)
+  {
+    <p>@country.Name</p>
+  }
+    
+  <b><label asp-for="Rate"></label></b>
+  <p>IMDb: @Model.Rate</p>
+  
+  <p><b>Price:</b> @Model.Price</p>
+</div>
+  
+@section Scripts {
+  @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

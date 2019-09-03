@@ -18,6 +18,12 @@
   <link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body>
+    <div>
+      @if (TempData["message"] != null)
+      {
+        <div class="alert alert-success">@TempData["message"]</div>
+      }
+    </div>
   <header>
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
       <div class="container">
@@ -46,6 +52,11 @@
         @if (Context.User.Identity.IsAuthenticated)
         {
           <a class="nav-link text-dark" asp-area="" asp-controller="Log" asp-action="Logout">LogOut</a>
+          <a class="nav-link text-dark" asp-area="" asp-controller="Log" asp-action="Manage">Manage Account</a>
+          @if (Context.User.IsInRole("admin"))
+          {
+            <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Admin">Admin</a>
+          }
           <label class="navbar-text">Hello, @Context.User.Identity.Name</label>
         }
       </div>
