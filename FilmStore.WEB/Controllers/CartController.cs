@@ -22,28 +22,39 @@ namespace FilmStore.WEB.Controllers
 
     public IActionResult Cart()
     {
+      decimal sum = 0;
       var films = HttpContext.Session.Get<IEnumerable<FilmDTO>>("CartFilms");
       var mapper = CreateFilmDTOToFilmViewModelMapper();
 
+      if(films != null)
+      {
+        foreach (var film in films)
+          sum += film.Price;
+      }
+      ViewBag.Sum = sum;
       return View(mapper.Map<IEnumerable<FilmDTO>, IEnumerable<FilmViewModel>>(films));
     }
     public IActionResult AddToCart(int id, string returnUrl)
     {
       var film = orderService.GetFilm(id);
       List<FilmDTO> films = new List<FilmDTO>(); ;
+
       if(returnUrl == null)
         returnUrl = "~/Home/Index";
+
       if (HttpContext.Session.GetInt32("CartCount") == null)
       {
         HttpContext.Session.SetInt32("CartCount", 0);
       }
       HttpContext.Session.SetInt32("CartCount", (int)HttpContext.Session.GetInt32("CartCount") + 1);
+
       if(HttpContext.Session.Get<IEnumerable<FilmDTO>>("CartFilms") == null)
       {
         HttpContext.Session.Set<IEnumerable<FilmDTO>>("CartFilms", new List<FilmDTO> { film });
         return Redirect(returnUrl);
       }
       films = HttpContext.Session.Get<IEnumerable<FilmDTO>>("CartFilms").ToList();
+
       films.Add(film);
 
       HttpContext.Session.Set<IEnumerable<FilmDTO>>("CartFilms", films);

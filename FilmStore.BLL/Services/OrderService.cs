@@ -12,6 +12,7 @@ namespace FilmStore.BLL.Services
   public class OrderService : IOrderService
   {
     IUnitOfWork Database { get; set; }
+
     public OrderService(IUnitOfWork unitOfWork)
     {
       Database = unitOfWork;

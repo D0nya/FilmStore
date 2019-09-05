@@ -5,18 +5,46 @@
   @inject IHttpContextAccessor HttpContextAccessor
 }
 
-@if(Context.Session.GetInt32("CartCount") == null || Context.Session.GetInt32("CartCount") == 0)
+@if (Context.Session.GetInt32("CartCount") == null || Context.Session.GetInt32("CartCount") == 0)
 {
   <h4>You don't have any films in cart. Add some: <a asp-action="Index" asp-controller="Home">here</a></h4>
 }
-
-@{ decimal sum = 0;}
-@foreach (var item in Model)
+else
 {
-  @item.Name   @item.Producer.Name   @item.Year   @item.Rate   @item.Price<br />
-  sum += item.Price;
+  @foreach (var film in Model)
+  {
+    <h2>@film.Name</h2>
+    <hr />
+    <label>Producer: <a href="~/Home/Producers/@film.Producer.Id">@film.Producer.Name</a></label>
+    <br />
+    <label>
+      Countries: <br />
+      @foreach (var country in film.Countries)
+      {
+        <label>@country.Name </label>
+      }
+    </label>
+    <br />
+    <label>
+      Genres: <br />
+      @foreach (var genre in film.Genres)
+      {
+        <label>@genre.Name </label>
+      }
+    </label>
+    <br />
+    <label>Year: @film.Year</label>
+    <br />
+    <label>Rate: @film.Rate</label>
+    <br />
+    <label><b>@film.Price$</b></label>
+    <br />
+    <hr />
+  }
+
+  <h4><b>Sum: @ViewBag.Sum</b></h4>
+  <a class="btn btn-primary btn-lg" role="button">Confirm</a>
 }
-<h4><b>Sum: @sum</b></h4>
 
 @section Scripts {
   @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
