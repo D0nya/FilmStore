@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<FilmViewModel>
 @{ 
-  ViewData["Title"] = "Films";
+  ViewData["Title"] = "Store";
 }
 <!DOCTYPE html>
 <html>
@@ -9,39 +9,25 @@
 </head>
 
 <body>
-  <h3>Films:</h3>
-  <table class="table-bordered">
-    <tr>
-      <td>Name</td>
-      <td>Producer</td>
-      <td>Genre</td>
-      <td>Year</td>
-      <td>Country</td>
-      <td>Rate</td>
-      <td>Price</td>
-    </tr>
-    @foreach (var film in Model)
+  <h1>Welocme</h1>
+  <p>Here you can enjoy your favourite movies with the best quality.</p><hr />
+  <div class="header">
+    <h2>Hello!</h2>
+    <p>Welcome to my film store. Here you can buy the best films according to your preferences.</p>
+    <p>
+      Store contains many films of various genres from different producers all over the world.
+      From old noirs to fresh comedies. We guarantee that you find what you like.
+    </p>
+    <hr />
+  </div>
+  <div class="news">
+    @if (Context.User.IsInRole("admin"))
     {
-  <tr>
-    <td>@film.Name</td>
-    <td><a href="~/Home/Producers/@film.Producer.Id">@film.Producer.Name</a></td>
-    <td>@foreach (var genre in film.Genres)
-    {
-      <a href="~/Home/Genres/@genre.Id">@genre.Name</a><br />
+      //Add news
     }
-    </td>
-    <td>@film.Year</td>
-    <td>@foreach (var country in film.Countries)
-	      {
-		      <a href="~/Home/Countries/@country.Id">@country.Name</a>
-	      }
-    </td>
-    <td>@film.Rate</td>
-    <td>@film.Price $</td>
-    <td><a asp-action="AddToCart" asp-controller="Cart" asp-route-id="@film.Id" asp-route-returnUrl="@Context.Request.Host@Context.Request.Path">Buy</a></td>
-  </tr>
-    }
-  </table>
+     <!--News-->
+    <h2>There should be some news.</h2>
+  </div>
 </body>
 
 </html>

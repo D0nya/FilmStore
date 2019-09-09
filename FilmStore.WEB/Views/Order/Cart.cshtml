@@ -5,17 +5,25 @@
   @inject IHttpContextAccessor HttpContextAccessor
 }
 
-@if (Context.Session.GetInt32("CartCount") == null || Context.Session.GetInt32("CartCount") == 0)
+@if (Context.Session.GetString("CartFilms") == null)
 {
-  <h4>You don't have any films in cart. Add some: <a asp-action="Index" asp-controller="Home">here</a></h4>
+  <h4>You don't have any films in cart. Add some: <a asp-action="Products" asp-controller="Order">here</a></h4>
 }
 else
 {
   @foreach (var film in Model)
   {
-    <h2>@film.Name</h2>
+    <h2>@film.Name
+      <a role="button" class="btn btn-primary" style="border-radius:50%; width:2.3rem;" 
+         href="~/Order/RemoveFromCart/@film.Id?first=true">-</a>
+      @ViewBag.FilmsDistinctAmount[film.Name]
+      <a role="button" class="btn btn-primary" style="border-radius:50%; width:2.3rem;" 
+       href="~/Order/AddToCart/@film.Id?count=1&returnUrl=@Context.Request.Host@Context.Request.Path">+</a>
+    </h2>
+    
+    
     <hr />
-    <label>Producer: <a href="~/Home/Producers/@film.Producer.Id">@film.Producer.Name</a></label>
+    <label>Producer: @film.Producer.Name</label>
     <br />
     <label>
       Countries: <br />
@@ -38,7 +46,7 @@ else
     <label>Rate: @film.Rate</label>
     <br />
     <label><b>@film.Price$</b></label>
-    <br />
+    <a class="btn btn-secondary" role="button" asp-action="RemoveFromCart" asp-route-id="@film.Id" asp-route-first="false">Remove</a>
     <hr />
   }
 

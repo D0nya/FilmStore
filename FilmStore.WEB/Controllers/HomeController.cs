@@ -10,24 +10,9 @@ namespace FilmStore.WEB.Controllers
 {
   public class HomeController : Controller
   {
-    IOrderService orderService;
-    public HomeController(IOrderService serv)
-    {
-      orderService = serv;
-    }
     public IActionResult Index()
     {
-      IEnumerable<FilmDTO> filmDTOs = orderService.GetFilms();
-      var mapper = new MapperConfiguration(cfg =>
-       {
-         cfg.CreateMap<CountryDTO, CountryViewModel>();
-         cfg.CreateMap<GenreDTO, GenreViewModel>();
-         cfg.CreateMap<PurchaseDTO, PurchaseViewModel>();
-         cfg.CreateMap<ProducerDTO, ProducerViewModel>();
-         cfg.CreateMap<FilmDTO, FilmViewModel>();
-       }).CreateMapper();
-      var films = mapper.Map<IEnumerable<FilmDTO>, List<FilmViewModel>>(filmDTOs);
-      return View(films);
+      return View();
     }
 
     public IActionResult Privacy()

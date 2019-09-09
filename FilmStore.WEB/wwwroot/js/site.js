@@ -3,7 +3,3 @@
 
 // Write your JavaScript code.
 
-$('.btn-genre').on('click', function () {
-  
-  $(this).children('input').attr('checked', !$(this).children('input').attr('checked'));
-});

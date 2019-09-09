@@ -93,7 +93,8 @@ namespace FilmStore.BLL.Services
         .ForMember(src => src.Purchases, opt => opt.Ignore());
         cfg.CreateMap<User, UserDTO>();
       }).CreateMapper();
-      return mapper.Map<User, UserDTO>(user);
+      var userDto  = mapper.Map<User, UserDTO>(user);
+      return userDto;
     }
   }
 }

@@ -2,6 +2,7 @@
 using FilmStore.BLL.DTO;
 using FilmStore.BLL.Interfaces;
 using FilmStore.WEB.Models;
+using FilmStore.WEB.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -20,22 +21,9 @@ namespace FilmStore.WEB.Controllers
     public ViewResult FilmDetails(int id)
     {
       var film = _orderService.GetFilm(id);
-      var mapper = CreateFilmDTOToFilmViewModelMapper();
-      return View(mapper.Map<FilmDTO, FilmViewModel>(film));
+      var mapper = MapperService.CreateFilmDTOToFilmViewModelMapper();
+      var viewFilm = mapper.Map<FilmDTO, FilmViewModel>(film);
+      return View(viewFilm);
     }
-    private IMapper CreateFilmDTOToFilmViewModelMapper()
-    {
-      var mapper = new MapperConfiguration(cfg =>
-      {
-        cfg.CreateMap<CountryDTO, CountryViewModel>();
-        cfg.CreateMap<GenreDTO, GenreViewModel>();
-        cfg.CreateMap<PurchaseDTO, PurchaseViewModel>();
-        cfg.CreateMap<ProducerDTO, ProducerViewModel>();
-        cfg.CreateMap<FilmDTO, FilmViewModel>()
-        .ForMember(src => src.Purchases, opt => opt.Ignore());
-      }).CreateMapper();
-      return mapper;
-    }
-
   }
 }

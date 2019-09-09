@@ -1,9 +1,10 @@
-﻿using AutoMapper;
-using FilmStore.BLL.DTO;
+﻿using FilmStore.BLL.DTO;
 using FilmStore.BLL.Infrastructure;
 using FilmStore.BLL.Interfaces;
 using FilmStore.DAL.Entities;
 using FilmStore.DAL.Interfaces;
+using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -23,49 +24,46 @@ namespace FilmStore.BLL.Services
       var film = Database.Films.Get(id);
       if (film == null)
         throw new ValidationException("Film not found", $"Id: {id}");
-      var mapper = FilmToFilmDTOMapper();
-      return mapper.Map<Film, FilmDTO>(film);
+      var mapper = MapperService.CreateFilmToFilmDTOMapper();
+      var filmDto = mapper.Map<Film, FilmDTO>(film);
+      return filmDto;
     }
     public IEnumerable<FilmDTO> GetFilms()
     {
-      var mapper = FilmToFilmDTOMapper();
-      return mapper.Map<IEnumerable<Film>, List<FilmDTO>>(Database.Films.GetAll()); 
+      var mapper = MapperService.CreateFilmToFilmDTOMapper();
+      var films = mapper.Map<IEnumerable<Film>, List<FilmDTO>>(Database.Films.GetAll());
+      return films;
     }
-    private IMapper FilmToFilmDTOMapper()
-    {
-      var mapper = new MapperConfiguration(cfg =>
-      {
-        cfg.CreateMap<Country, CountryDTO>()
-        .ForMember(dst => dst.Films, opt => opt.MapFrom(src => src.Films.Select(f => f.Film)));
-        cfg.CreateMap<Genre, GenreDTO>()
-        .ForMember(dst => dst.Films, opt => opt.MapFrom(src => src.Films.Select(f => f.Film)));
-        cfg.CreateMap<Purchase, PurchaseDTO>()
-        .ForMember(dst => dst.Films, opt => opt.MapFrom(src => src.Films.Select(f => f.Film)));
+ 
 
-        cfg.CreateMap<FilmCountry, CountryDTO>()
-        .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Country.Id))
-        .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Country.Name))
-        .ForMember(dst => dst.Films, opt => opt.Ignore());
-        cfg.CreateMap<FilmGenre, GenreDTO>()
-        .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Genre.Id))
-        .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Genre.Name))
-        .ForMember(dst => dst.Films, opt => opt.Ignore());
-        cfg.CreateMap<FilmPurchase, PurchaseDTO>()
-        .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Purchase.Id))
-        .ForMember(dst => dst.Date, opt => opt.MapFrom(src => src.Purchase.Date))
-        .ForMember(dst => dst.Customer, opt => opt.MapFrom(src => src.Purchase.Customer))
-        .ForMember(dst => dst.Films, opt => opt.Ignore());
-        cfg.CreateMap<Producer, ProducerDTO>()
-        .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id))
-        .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Name))
-        .ForMember(dst => dst.Films, opt => opt.MapFrom(src => src.Films));
-        cfg.CreateMap<Film, FilmDTO>()
-        .ForMember(dst => dst.Countries, opt => opt.MapFrom(src => src.Countries.Select(c => c.Country).ToList()))
-        .ForMember(dst => dst.Genres, opt => opt.MapFrom(src => src.Genres.Select(g => g.Genre).ToList()))
-        .ForMember(dst => dst.Purchases, opt => opt.MapFrom(src => src.Purchases.Select(p => p.Purchase).ToList()));
-      }).CreateMapper();
-      return mapper;
+    public IEnumerable<FilmDTO> GetFilmsFromCart(HttpContext context, string key)
+    {
+      var items = context.Session.Get<IEnumerable<FilmDTO>>(key);
+      return items;
     }
+    public void AddFilmsToCart(HttpContext context, string key, IEnumerable<FilmDTO> films)
+    {
+      List<FilmDTO> res = new List<FilmDTO>();
+      if (GetFilmsFromCart(context, key) != null)
+        res.AddRange(GetFilmsFromCart(context, key));
+      res.AddRange(films);
+      context.Session.Set(key, res);
+    }
+    public void RemoveFromCart(HttpContext context, string key, bool first, Predicate<FilmDTO> predicate)
+    {
+      List<FilmDTO> films = new List<FilmDTO>();
+      if (GetFilmsFromCart(context, key) != null)
+        films = GetFilmsFromCart(context, key).ToList();
+      else
+        return;
+
+      if (first)
+        films.Remove(films.Where(new Func<FilmDTO, bool>(predicate)).First());
+      else
+        films.RemoveAll(predicate);
+      context.Session.Set(key, films);
+    }
+
     public void Dispose()
     {
       Database.Dispose();

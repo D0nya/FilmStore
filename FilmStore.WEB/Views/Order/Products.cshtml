@@ -1,0 +1,61 @@
+﻿@model IEnumerable<FilmViewModel>
+@{
+  ViewData["Title"] = "Products";
+}
+<!DOCTYPE html>
+<html>
+<head>
+  <title>@ViewData["Title"]</title>
+  <script src="~/lib/jquery/dist/jquery.min.js"></script>
+</head>
+
+<body>
+  @foreach (var film in Model)
+  {
+    <div class="film">
+      <div class="card-title">
+        <h4>@film.Name</h4>
+      </div>
+      <div class="info">
+        <p>Producer: @film.Producer.Name</p>
+        <p>
+          Genres: @foreach (var genre in film.Genres)
+          {
+            @genre.Name
+          }
+        </p>
+        <p>
+          Countires: @foreach (var country in film.Countries)
+          {
+            @country.Name
+          }
+        </p>
+        <p>Year: @film.Year</p>
+      </div>
+      <div class="card-footer">
+        <label style="float:left; width:50%">IMDb: @film.Rate</label>
+        <label style="text-align:right; width:auto"><b>@film.Price$</b></label>
+        <input type="number" style="width:100px" value="1" />
+        <a class="btn btn-primary" role="button" href="~/Order/AddToCart/@film.Id?count=1&returnUrl=@Context.Request.Host@Context.Request.Path">Add to cart</a>
+      </div>
+    </div>
+  }
+  <script>
+    $('div.film>div.card-footer>input').on(
+      {
+        'input': function () {
+          var num = $(this).val();
+          var ref = $(this).siblings('a').attr('href');
+          var index = ref.indexOf('count=') + 'count='.length;
+          ref = ref.substr(0, index) + num + ref.substr(ref.indexOf('&'), ref.length);
+          $(this).siblings('a').attr('href', ref);
+        }
+      })
+  </script>
+</body>
+
+</html>
+
+@section Scripts {
+  @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
