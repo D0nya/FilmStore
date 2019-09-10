@@ -9,7 +9,8 @@ namespace FilmStore.BLL.DTO
     public int Id { get; set; }
     public CustomerDTO Customer { get; set; }
     public Status Status { get; set; }
-    public List<FilmDTO> Films { get; set; }
+    public int[] Quantity { get; set; }
+    public FilmDTO[] Films { get; set; }
     public DateTime Date { get; set; }
   }
 }

@@ -16,6 +16,8 @@ namespace FilmStore.BLL.Interfaces
 
     void AddPurchase(HttpContext context, string key);
 
+    IEnumerable<PurchaseDTO> GetPurchases(string name = null);
+
     void Dispose();
   }
 }

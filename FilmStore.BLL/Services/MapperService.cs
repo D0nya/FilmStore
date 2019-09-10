@@ -17,7 +17,11 @@ namespace FilmStore.BLL.Services
         cfg.CreateMap<Genre, GenreDTO>()
         .ForMember(dst => dst.Films, opt => opt.MapFrom(src => src.Films.Select(f => f.Film)));
         cfg.CreateMap<Purchase, PurchaseDTO>()
-        .ForMember(dst => dst.Films, opt => opt.MapFrom(src => src.Films.Select(f => f.Film)));
+        .ForMember(dst => dst.Films, opt => opt.MapFrom(src => src.Films.Select(fp => fp.Film)))
+        .ForMember(dst => dst.Quantity, opt => opt.MapFrom(src => src.Films.Select(fp => fp.Quantity)));
+        cfg.CreateMap<User, UserDTO>();
+        cfg.CreateMap<Customer, CustomerDTO>()
+        .ForMember(dst => dst.Purchases, opt => opt.Ignore());
 
         cfg.CreateMap<FilmCountry, CountryDTO>()
         .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Country.Id))

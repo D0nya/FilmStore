@@ -106,7 +106,9 @@ namespace FilmStore.WEB.Controllers
 
     public IActionResult Purchases()
     {
-      return View();
+      var mapper = MapperService.CreateFilmDTOToFilmViewModelMapper();
+      var purchases = mapper.Map<IEnumerable<PurchaseDTO>, IEnumerable<PurchaseViewModel>>(_orderService.GetPurchases());
+      return View(purchases);
     }
   }
 }

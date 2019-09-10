@@ -34,7 +34,6 @@ namespace FilmStore.BLL.Services
       var films = mapper.Map<IEnumerable<Film>, List<FilmDTO>>(Database.Films.GetAll());
       return films;
     }
- 
 
     public IEnumerable<FilmDTO> GetFilmsFromCart(HttpContext context, string key)
     {
@@ -71,14 +70,15 @@ namespace FilmStore.BLL.Services
 
       Customer customer = Database.Customers.Find(c => c.Name == context.User.Identity.Name).First();
 
-      Purchase purchase = new Purchase { Customer = customer, Date = DateTime.Now };
+      Purchase purchase = new Purchase { Customer = customer, Date = DateTime.Now, Status = Status.Pending };
 
-      foreach (var item in filmDTOs)
+      foreach (var item in filmDTOs.GroupBy(f=>f.Id))
       {
         films.Add(new FilmPurchase
         {
-          FilmId = item.Id,
-          Film = Database.Films.Get(item.Id),
+          FilmId = item.Key,
+          Film = Database.Films.Get(item.Key),
+          Quantity = item.Count(),
           PurchaseId = purchase.Id,
           Purchase = purchase
         });
@@ -90,6 +90,19 @@ namespace FilmStore.BLL.Services
       context.Session.Clear();
     }
 
+    public IEnumerable<PurchaseDTO> GetPurchases(string name = null)
+    {
+      int userId = Database.Customers.Find(c => c.Name == name).First().Id;
+
+      var mapper = MapperService.CreateFilmToFilmDTOMapper();
+      IEnumerable<PurchaseDTO> purchases = 
+        mapper.Map<IEnumerable<Purchase>, IEnumerable<PurchaseDTO>>(Database.Purchases.GetAll());
+
+      if(name != null)
+        purchases = purchases.Where(p => p.Id == userId);
+
+      return purchases;
+    }
     public void Dispose()
     {
       Database.Dispose();

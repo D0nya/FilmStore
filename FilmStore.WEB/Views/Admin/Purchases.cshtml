@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<PurchaseViewModel>
 @{
-  ViewBag.Title = "Admin panel";
+  ViewBag.Title = "Admin : Purchases";
 }
 
 <div class="panel panel-default">
@@ -16,20 +16,25 @@
         <td>Customer</td>
         <td>Films</td>
         <td>Date</td>
+        <td>Status</td>
       </tr>
-      <tr>
         @foreach (var purchase in Model)
         {
-          <td>@purchase.Id</td>
-          <td>@purchase.Customer.Name</td>
-          <td>
-          @foreach (var item in purchase.Films)
-          {
-
-          }
-          </td>
+          <tr>
+            <td>@purchase.Id</td>
+            <td>@purchase.Customer.FirstName @purchase.Customer.LastName (@purchase.Customer.Name)</td>
+            <td>
+              @for(int i = 0; i < purchase.Films.Length; i++)
+              {
+                <label>@purchase.Films[i].Name (@purchase.Quantity[i])</label><br/>
+              }
+            </td>
+            <td>
+              @purchase.Date
+            </td>
+            <td>@purchase.Status</td>
+          </tr>
         }
-      </tr>
     </table>
   </div>
 </div>

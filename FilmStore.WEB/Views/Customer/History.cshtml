@@ -1,0 +1,43 @@
+﻿@model IEnumerable<PurchaseViewModel>
+@{
+  ViewBag.Title = "Customer : Hystory";
+}
+
+<div class="panel panel-default">
+
+  <div class="panel-heading">
+    <h3>Hystory</h3>
+  </div>
+
+  <div class="panel-body">
+    <label>Customer: @Context.User.Identity.Name</label>
+    <table class="table table-striped table-condensed table-bordered">
+      <tr>
+        <td>Id</td>
+        <td>Films</td>
+        <td>Date</td>
+        <td>Status</td>
+      </tr>
+      @foreach (var purchase in Model)
+      {
+        <tr>
+          <td>@purchase.Id</td>
+          <td>
+            @for (int i = 0; i < purchase.Films.Length; i++)
+            {
+              <label>@purchase.Films[i].Name (@purchase.Quantity[i])</label><br />
+            }
+          </td>
+          <td>
+            @purchase.Date
+          </td>
+          <td>@purchase.Status</td>
+        </tr>
+      }
+    </table>
+  </div>
+</div>
+
+@section Scripts {
+  @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
