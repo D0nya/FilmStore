@@ -7,5 +7,7 @@
 
     public int PurchaseId { get; set; }
     public virtual Purchase Purchase { get; set; }
+
+    public int Quantity { get; set; }
   }
 }

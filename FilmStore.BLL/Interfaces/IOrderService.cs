@@ -14,6 +14,8 @@ namespace FilmStore.BLL.Interfaces
     void AddFilmsToCart(HttpContext context, string key, IEnumerable<FilmDTO> films);
     void RemoveFromCart(HttpContext context, string key, bool first, Predicate<FilmDTO> predicate);
 
+    void AddPurchase(HttpContext context, string key);
+
     void Dispose();
   }
 }

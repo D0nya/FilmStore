@@ -4,7 +4,6 @@ using FilmStore.BLL.Interfaces;
 using FilmStore.DAL.Entities;
 using FilmStore.DAL.Interfaces;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace FilmStore.BLL.Services
 {

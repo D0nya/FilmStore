@@ -4,14 +4,16 @@ using FilmStore.DAL.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FilmStore.DAL.Migrations
 {
     [DbContext(typeof(FilmStoreContext))]
-    partial class FilmStoreContextModelSnapshot : ModelSnapshot
+    [Migration("20190910073827_AddedStatusToPurchase")]
+    partial class AddedStatusToPurchase
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -57,31 +59,6 @@ namespace FilmStore.DAL.Migrations
                     b.ToTable("Customers");
                 });
 
-            modelBuilder.Entity("FilmStore.DAL.Entities.Film", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Name");
-
-                    b.Property<decimal>("Price");
-
-                    b.Property<int?>("ProducerId");
-
-                    b.Property<int>("QuantityInStock");
-
-                    b.Property<float>("Rate");
-
-                    b.Property<string>("Year");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProducerId");
-
-                    b.ToTable("Films");
-                });
-
             modelBuilder.Entity("FilmStore.DAL.Entities.FilmCountry", b =>
                 {
                     b.Property<int>("CountryId");
@@ -114,13 +91,34 @@ namespace FilmStore.DAL.Migrations
 
                     b.Property<int>("PurchaseId");
 
-                    b.Property<int>("Quantity");
-
                     b.HasKey("FilmId", "PurchaseId");
 
                     b.HasIndex("PurchaseId");
 
                     b.ToTable("FilmPurchase");
+                });
+
+            modelBuilder.Entity("FilmStore.DAL.Entities.FilmViewModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name");
+
+                    b.Property<decimal>("Price");
+
+                    b.Property<int?>("ProducerId");
+
+                    b.Property<float>("Rate");
+
+                    b.Property<string>("Year");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProducerId");
+
+                    b.ToTable("Films");
                 });
 
             modelBuilder.Entity("FilmStore.DAL.Entities.Genre", b =>
@@ -336,13 +334,6 @@ namespace FilmStore.DAL.Migrations
                         .HasForeignKey("FilmStore.DAL.Entities.Customer", "UserRef");
                 });
 
-            modelBuilder.Entity("FilmStore.DAL.Entities.Film", b =>
-                {
-                    b.HasOne("FilmStore.DAL.Entities.Producer", "Producer")
-                        .WithMany("Films")
-                        .HasForeignKey("ProducerId");
-                });
-
             modelBuilder.Entity("FilmStore.DAL.Entities.FilmCountry", b =>
                 {
                     b.HasOne("FilmStore.DAL.Entities.Country", "Country")
@@ -350,7 +341,7 @@ namespace FilmStore.DAL.Migrations
                         .HasForeignKey("CountryId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("FilmStore.DAL.Entities.Film", "Film")
+                    b.HasOne("FilmStore.DAL.Entities.FilmViewModel", "Film")
                         .WithMany("Countries")
                         .HasForeignKey("FilmId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -358,7 +349,7 @@ namespace FilmStore.DAL.Migrations
 
             modelBuilder.Entity("FilmStore.DAL.Entities.FilmGenre", b =>
                 {
-                    b.HasOne("FilmStore.DAL.Entities.Film", "Film")
+                    b.HasOne("FilmStore.DAL.Entities.FilmViewModel", "Film")
                         .WithMany("Genres")
                         .HasForeignKey("FilmId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -371,7 +362,7 @@ namespace FilmStore.DAL.Migrations
 
             modelBuilder.Entity("FilmStore.DAL.Entities.FilmPurchase", b =>
                 {
-                    b.HasOne("FilmStore.DAL.Entities.Film", "Film")
+                    b.HasOne("FilmStore.DAL.Entities.FilmViewModel", "Film")
                         .WithMany("Purchases")
                         .HasForeignKey("FilmId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -380,6 +371,13 @@ namespace FilmStore.DAL.Migrations
                         .WithMany("Films")
                         .HasForeignKey("PurchaseId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("FilmStore.DAL.Entities.FilmViewModel", b =>
+                {
+                    b.HasOne("FilmStore.DAL.Entities.Producer", "Producer")
+                        .WithMany("Films")
+                        .HasForeignKey("ProducerId");
                 });
 
             modelBuilder.Entity("FilmStore.DAL.Entities.Purchase", b =>

@@ -8,6 +8,7 @@ namespace FilmStore.DAL.Entities
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
     public string Name { get; set; }
+    public int QuantityInStock { get; set; }
     public string Year { get; set; }
     public decimal Price { get; set; }
     public float Rate { get; set; }

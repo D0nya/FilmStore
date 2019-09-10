@@ -64,6 +64,32 @@ namespace FilmStore.BLL.Services
       context.Session.Set(key, films);
     }
 
+    public void AddPurchase(HttpContext context, string key)
+    {
+      List<FilmPurchase> films = new List<FilmPurchase>();
+      List<FilmDTO> filmDTOs = GetFilmsFromCart(context, key).ToList();
+
+      Customer customer = Database.Customers.Find(c => c.Name == context.User.Identity.Name).First();
+
+      Purchase purchase = new Purchase { Customer = customer, Date = DateTime.Now };
+
+      foreach (var item in filmDTOs)
+      {
+        films.Add(new FilmPurchase
+        {
+          FilmId = item.Id,
+          Film = Database.Films.Get(item.Id),
+          PurchaseId = purchase.Id,
+          Purchase = purchase
+        });
+      }
+      purchase.Films = films;
+      Database.Purchases.Create(purchase);
+
+      Database.SaveAsync().Wait();
+      context.Session.Clear();
+    }
+
     public void Dispose()
     {
       Database.Dispose();

@@ -5,7 +5,7 @@
   @inject IHttpContextAccessor HttpContextAccessor
 }
 
-@if (Context.Session.GetString("CartFilms") == null)
+@if (Context.Session.GetInt32("CartFilms") == null)
 {
   <h4>You don't have any films in cart. Add some: <a asp-action="Products" asp-controller="Order">here</a></h4>
 }
@@ -51,7 +51,7 @@ else
   }
 
   <h4><b>Sum: @ViewBag.Sum</b></h4>
-  <a class="btn btn-primary btn-lg" role="button">Confirm</a>
+  <a class="btn btn-primary btn-lg" role="button" asp-action="MakeOrder" asp-controller="Order">Confirm</a>
 }
 
 @section Scripts {

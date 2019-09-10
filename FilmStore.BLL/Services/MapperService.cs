@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FilmStore.BLL.DTO;
 using FilmStore.DAL.Entities;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace FilmStore.BLL.Services
@@ -30,6 +31,7 @@ namespace FilmStore.BLL.Services
         .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Purchase.Id))
         .ForMember(dst => dst.Date, opt => opt.MapFrom(src => src.Purchase.Date))
         .ForMember(dst => dst.Customer, opt => opt.MapFrom(src => src.Purchase.Customer))
+        .ForMember(dst => dst.Status, opt => opt.MapFrom(src => src.Purchase.Status))
         .ForMember(dst => dst.Films, opt => opt.Ignore());
         cfg.CreateMap<Producer, ProducerDTO>()
         .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id))
@@ -38,7 +40,7 @@ namespace FilmStore.BLL.Services
         cfg.CreateMap<Film, FilmDTO>()
         .ForMember(dst => dst.Countries, opt => opt.MapFrom(src => src.Countries.Select(c => c.Country).ToList()))
         .ForMember(dst => dst.Genres, opt => opt.MapFrom(src => src.Genres.Select(g => g.Genre).ToList()))
-        .ForMember(dst => dst.Purchases, opt => opt.MapFrom(src => src.Purchases.Select(p => p.Purchase).ToList()));
+        .ForMember(dst => dst.Purchases, opt => opt.Ignore());
       }).CreateMapper();
       return mapper;
     }

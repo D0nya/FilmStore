@@ -103,5 +103,10 @@ namespace FilmStore.WEB.Controllers
       TempData["message"] = $"Film {filmName} was deleted successfully.";
       return RedirectToAction("Admin");
     }
+
+    public IActionResult Purchases()
+    {
+      return View();
+    }
   }
 }

@@ -10,6 +10,8 @@ namespace FilmStore.WEB.Models
     public int Id { get; set; }
     [Display(Name = "Name")]
     public string Name { get; set; }
+    [HiddenInput(DisplayValue = false)]
+    public int QuantityInStock { get; set; }
     [Display(Name = "Year")]
     public string Year { get; set; }
     [Display(Name = "Price")]

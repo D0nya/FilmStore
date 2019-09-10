@@ -4,14 +4,16 @@ using FilmStore.DAL.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FilmStore.DAL.Migrations
 {
     [DbContext(typeof(FilmStoreContext))]
-    partial class FilmStoreContextModelSnapshot : ModelSnapshot
+    [Migration("20190909144134_AddedQuantityToPurchases")]
+    partial class AddedQuantityToPurchases
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -158,8 +160,6 @@ namespace FilmStore.DAL.Migrations
                     b.Property<int?>("CustomerId");
 
                     b.Property<DateTime>("Date");
-
-                    b.Property<int>("Status");
 
                     b.HasKey("Id");
 

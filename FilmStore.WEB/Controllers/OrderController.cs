@@ -1,10 +1,8 @@
 ﻿using FilmStore.BLL.DTO;
 using FilmStore.BLL.Interfaces;
-using FilmStore.BLL.Infrastructure;
 using FilmStore.WEB.Models;
 using FilmStore.WEB.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
@@ -72,6 +70,13 @@ namespace FilmStore.WEB.Controllers
       var mapper = MapperService.CreateFilmDTOToFilmViewModelMapper();
       var films = mapper.Map<IEnumerable<FilmDTO>, List<FilmViewModel>>(filmDTOs);
       return View(films);
+    }
+
+    public IActionResult MakeOrder()
+    {
+      TempData["message"] = $"Your order has been sent for review.";
+      orderService.AddPurchase(HttpContext, "CartFilms");
+      return RedirectToAction("Cart");
     }
   }
 }
