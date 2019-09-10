@@ -48,5 +48,17 @@ namespace FilmStore.BLL.Services
       }).CreateMapper();
       return mapper;
     }
+    public static IMapper CreatePurchaseDTOToPurchaseMapper()
+    {
+      var mapper = new MapperConfiguration(cfg =>
+      {
+        cfg.CreateMap<UserDTO, User>();
+        cfg.CreateMap<CustomerDTO, Customer>()
+        .ForMember(src => src.Purchases, opt => opt.Ignore());
+        cfg.CreateMap<PurchaseDTO, Purchase>()
+        .ForMember(src => src.Films, opt => opt.Ignore());
+      }).CreateMapper();
+      return mapper;
+    }
   }
 }

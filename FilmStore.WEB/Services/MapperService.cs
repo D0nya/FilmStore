@@ -26,6 +26,8 @@ namespace FilmStore.WEB.Services
       var mapper = new MapperConfiguration(cfg =>
       {
         cfg.CreateMap<CountryViewModel, CountryDTO>();
+        cfg.CreateMap<UserViewModel, UserDTO>();
+        cfg.CreateMap<CustomerViewModel, CustomerDTO>();
         cfg.CreateMap<GenreViewModel, GenreDTO>();
         cfg.CreateMap<PurchaseViewModel, PurchaseDTO>();
         cfg.CreateMap<ProducerViewModel, ProducerDTO>();

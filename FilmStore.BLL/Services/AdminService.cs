@@ -48,6 +48,17 @@ namespace FilmStore.BLL.Services
       return producers;
     }
 
+    public void ChangeQuantityInStock(FilmDTO filmDTO)
+    {
+      Film film = Database.Films.Get(filmDTO.Id);
+      if(film != null)
+      {
+        film.QuantityInStock = filmDTO.QuantityInStock;
+        Database.Films.Update(film);
+        Database.SaveAsync().Wait();
+      }
+    }
+
     public void SaveFilm(FilmDTO filmDTO)
     {
       Film film;
@@ -98,7 +109,7 @@ namespace FilmStore.BLL.Services
           film.Price = filmDTO.Price;
           film.Year = filmDTO.Year;
           film.Rate = filmDTO.Rate;
-
+          film.QuantityInStock = filmDTO.QuantityInStock;
           film.Producer = Database.Producers.Get(filmDTO.ProducerId);
 
           film.Countries.Clear();
@@ -128,6 +139,27 @@ namespace FilmStore.BLL.Services
         Database.Films.Update(film);
       }
       Database.SaveAsync().Wait();
+    }
+
+    public void SavePurchase(PurchaseDTO purchaseDTO)
+    {
+      Purchase purchase = Database.Purchases.Get(purchaseDTO.Id);
+      if(purchase != null)
+      {
+        purchase.Status = purchaseDTO.Status;
+        Database.Purchases.Update(purchase);
+
+        if (purchase.Status == Status.Confirmed)
+        {
+          foreach (var film in purchase.Films)
+          {
+            Database.Films.Get(film.FilmId).QuantityInStock -= film.Quantity;
+            Database.Films.Update(film.Film);
+          }
+        }
+
+        Database.SaveAsync().Wait();
+      }
     }
 
     public void DeleteFilm(int id)

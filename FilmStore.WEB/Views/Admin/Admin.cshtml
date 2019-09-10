@@ -58,7 +58,11 @@
           <td class="text-right"> @film.Rate </td>
           <td class="text-right"> @film.Price.ToString("# $")</td>
           <td class="text-right">
-            <input type="number" asp-for="@film.QuantityInStock" style="width:4rem"/>
+            <form asp-action="ChangeQuantity" method="post">
+              <input hidden type="hidden" asp-for="@film.Id" />
+              <input hidden type="hidden" asp-for="@film.Name" />
+              <input type="number" asp-for="@film.QuantityInStock" style="width:4rem" onchange="this.form.submit()"/>
+            </form>
           </td>
           <td>
             <a asp-action="Edit" asp-route-id="@film.Id" class="btn btn-default btn-xs">Edit</a>
@@ -66,11 +70,6 @@
           </td>
         </tr>
       }
-    <tr>
-      <td>
-        <a class="btn btn-secondary" role="button" href="">Save</a>
-      </td>
-    </tr>
     </table>
   </div>
 

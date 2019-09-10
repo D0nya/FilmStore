@@ -11,7 +11,7 @@ namespace FilmStore.BLL.DTO
     public string Year { get; set; }
     public decimal Price { get; set; }
     public float Rate { get; set; }
-
+    public int QuantityInStock { get; set; }
 
     public int ProducerId { get; set; }
     public ProducerDTO Producer { get; set; }

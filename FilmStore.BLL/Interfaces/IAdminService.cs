@@ -13,6 +13,8 @@ namespace FilmStore.BLL.Interfaces
     FilmDTO GetFilm(int id);
 
     void SaveFilm(FilmDTO filmDTO);
+    void SavePurchase(PurchaseDTO purchaseDTO);
+    void ChangeQuantityInStock(FilmDTO filmDTO);
     void DeleteFilm(int id);
   }
 }

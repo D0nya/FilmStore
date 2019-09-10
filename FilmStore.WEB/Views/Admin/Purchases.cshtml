@@ -18,23 +18,29 @@
         <td>Date</td>
         <td>Status</td>
       </tr>
-        @foreach (var purchase in Model)
-        {
+      @foreach (var purchase in Model)
+      {
           <tr>
             <td>@purchase.Id</td>
             <td>@purchase.Customer.FirstName @purchase.Customer.LastName (@purchase.Customer.Name)</td>
             <td>
-              @for(int i = 0; i < purchase.Films.Length; i++)
+              @for (int i = 0; i < purchase.Films.Length; i++)
               {
-                <label>@purchase.Films[i].Name (@purchase.Quantity[i])</label><br/>
+                <label>@purchase.Films[i].Name (@purchase.Quantity[i])</label><br />
               }
             </td>
             <td>
               @purchase.Date
             </td>
-            <td>@purchase.Status</td>
-          </tr>
-        }
+            <td>
+              <form asp-action="SubmitPurchase" method="post">
+                <input type="hidden" hidden asp-for="@purchase.Id" />
+                <input type="hidden" hidden asp-for="@purchase.Customer.User.Email" />
+                <select asp-for="@purchase.Status" asp-items="@ViewBag.Status" class="custom-select" onchange="this.form.submit()"></select>
+              </form>
+            </td>
+        </tr>
+      }
     </table>
   </div>
 </div>

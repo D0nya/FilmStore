@@ -92,14 +92,16 @@ namespace FilmStore.BLL.Services
 
     public IEnumerable<PurchaseDTO> GetPurchases(string name = null)
     {
-      int userId = Database.Customers.Find(c => c.Name == name).First().Id;
 
       var mapper = MapperService.CreateFilmToFilmDTOMapper();
       IEnumerable<PurchaseDTO> purchases = 
         mapper.Map<IEnumerable<Purchase>, IEnumerable<PurchaseDTO>>(Database.Purchases.GetAll());
 
       if(name != null)
+      {
+        int userId = Database.Customers.Find(c => c.Name == name).First().Id;
         purchases = purchases.Where(p => p.Id == userId);
+      }
 
       return purchases;
     }

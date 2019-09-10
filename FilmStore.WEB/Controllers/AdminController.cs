@@ -1,11 +1,12 @@
 ﻿using FilmStore.BLL.DTO;
 using FilmStore.BLL.Interfaces;
+using FilmStore.DAL.Entities;
 using FilmStore.WEB.Models;
 using FilmStore.WEB.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -16,10 +17,12 @@ namespace FilmStore.WEB.Controllers
   {
     private readonly IOrderService _orderService;
     private readonly IAdminService _adminService;
-    public AdminController(IOrderService orderService, IAdminService adminService)
+    private readonly IEmailSender _emailSender;
+    public AdminController(IOrderService orderService, IAdminService adminService, IEmailSender emailSender)
     {
       _orderService = orderService;
       _adminService = adminService;
+      _emailSender = emailSender;
     }
     public IActionResult Admin(string genreId, string searchString)
     {
@@ -68,6 +71,16 @@ namespace FilmStore.WEB.Controllers
       }
     }
 
+    [HttpPost]
+    public IActionResult ChangeQuantity(FilmViewModel film)
+    {
+      var mapper = MapperService.CreateFilmViewModelToFilmDTOMapper();
+      var filmDTO = mapper.Map<FilmViewModel, FilmDTO>(film);
+      _adminService.ChangeQuantityInStock(filmDTO);
+      TempData["message"] = $"{film.Name} quantity set to {film.QuantityInStock}.";
+      return RedirectToAction("Admin");
+    }
+
     public ViewResult AddFilm()
     {
       ViewBag.Genres = _adminService.GetGenres().Select(g => new SelectListItem(g.Name, g.Id.ToString()));
@@ -108,7 +121,30 @@ namespace FilmStore.WEB.Controllers
     {
       var mapper = MapperService.CreateFilmDTOToFilmViewModelMapper();
       var purchases = mapper.Map<IEnumerable<PurchaseDTO>, IEnumerable<PurchaseViewModel>>(_orderService.GetPurchases());
+      ViewBag.Status = new List<SelectListItem>
+      {
+        new SelectListItem("Pending", Status.Pending.ToString()),
+        new SelectListItem("Confirmed", Status.Confirmed.ToString()),
+        new SelectListItem("Rejected", Status.Rejected.ToString())
+      };
       return View(purchases);
+    }
+
+    [HttpPost]
+    public IActionResult SubmitPurchase(PurchaseViewModel purchase)
+    {
+      var mapper = MapperService.CreateFilmViewModelToFilmDTOMapper();
+      PurchaseDTO purchaseDTO = mapper.Map<PurchaseViewModel, PurchaseDTO>(purchase);
+
+      _adminService.SavePurchase(purchaseDTO);
+      TempData["message"] = $"Purchase #{purchase.Id}. Status: {purchase.Status}.";
+
+      if(purchase.Status != Status.Pending)
+      {
+        _emailSender.SendEmailAsync(purchase.Customer.User.Email, "Purchase status", $"Your purchase #{purchase.Id} was {purchase.Status}");
+      }
+
+      return RedirectToAction("Purchases");
     }
   }
 }
