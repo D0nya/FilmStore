@@ -1,0 +1,56 @@
+﻿@model IEnumerable<FilmViewModel>
+
+  <div id="searchResult">
+    <table class="table table-striped table-condensed table-bordered">
+      <thead>
+        <tr>
+          <th onclick="Filter(0)" class="text-right">Id</th>
+          <th onclick="Filter(1)">Title</th>
+          <th onclick="Filter(2)">Producer</th>
+          <th>Genre</th>
+          <th onclick="Filter(3)" class="text-right">Year</th>
+          <th>Country</th>
+          <th onclick="Filter(4)" class="text-right" >Rate</th>
+          <th onclick="Filter(5)" class="text-right" >Price</th>
+          <th onclick="Filter(6)" class="text-center"><i>Quantity</i></th>
+          <th class="text-center">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        @foreach (var film in Model)
+        {
+          <tr>
+            <td class="text-right"> @film.Id </td>
+            <td><a asp-action="FilmDetails" asp-controller="Details" asp-route-id="@film.Id">@film.Name</a></td>
+            <td> @film.Producer.Name </td>
+            <td>
+              @foreach (var genre in film.Genres)
+              {
+                @genre.Name <br />
+              }
+            </td>
+            <td class="text-right"> @film.Year </td>
+            <td>
+              @foreach (var country in film.Countries)
+              {
+                @country.Name <br />
+              }
+            </td>
+            <td class="text-right"> @film.Rate </td>
+            <td class="text-right"> @film.Price.ToString("# $")</td>
+            <td class="text-right">
+              <form asp-action="ChangeQuantity" asp-controller="Admin" method="post">
+                <input hidden type="hidden" asp-for="@film.Id" />
+                <input hidden type="hidden" asp-for="@film.Name" />
+                <input type="number" asp-for="@film.QuantityInStock" style="width:4rem" onchange="this.form.submit()" />
+              </form>
+            </td>
+            <td>
+              <a asp-action="Edit" asp-controller="Admin" asp-route-id="@film.Id" class="btn btn-default btn-xs btn-link">Edit</a>
+              <a asp-action="DeleteFilm" asp-controller="Admin" asp-route-id="@film.Id" class="btn btn-default btn-xs btn-link">Delete</a>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>

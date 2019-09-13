@@ -1,78 +1,42 @@
-﻿@model IEnumerable<FilmViewModel>
-@{
+﻿@{
   ViewBag.Title = "Admin panel";
 }
+
+  <head>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css">
+  </head>
 
 <div class="panel panel-default">
 
   <div class="panel-heading">
     <h3>Films <a asp-action="Purchases" asp-controller="Admin">Purchases</a></h3>
   </div>
+  @*<form asp-controller="Admin" asp-action="Admin" method="get">*@
+  <p>
+    Genre:
+    <select class="custom-select searchClass" style="width:auto" name="GenreId" asp-items="@ViewBag.Genres">
+      <option value="">All</option>
+    </select>
 
-  <div class="panel-body">
-    <form asp-controller="Admin" asp-action="Admin" method="get">
-      <p>
-        Genre:
-        <select name="GenreId" asp-items="@ViewBag.Genres">
-          <option value="">All</option>
-        </select>
-
-        Title: <input type="text" name="SearchString" />
-        <input class="btn btn-secondary" type="submit" value="Filter" />
-      </p>
-    </form>
-
-    <table class="table table-striped table-condensed table-bordered">
-      <tr>
-        <td class="text-right"><b>Id</b></td>
-        <td><b>Name</b></td>
-        <td><b>Producer</b></td>
-        <td><b>Genre</b></td>
-        <td class="text-right"><b>Year</b></td>
-        <td><b>Country</b></td>
-        <td class="text-right"><b>Rate</b></td>
-        <td class="text-right"><b>Price</b></td>
-        <td class="text-center"><i>Quantity</i></td>
-        <td class="text-center"><b>Action</b></td>
-      </tr>
-
-      @foreach (var film in Model)
-      {
-        <tr>
-          <td class="text-right"> @film.Id </td>
-          <td><a asp-action="FilmDetails" asp-controller="Details" asp-route-id="@film.Id">@film.Name</a></td>
-          <td> @film.Producer.Name </td>
-          <td>
-            @foreach (var genre in film.Genres)
-            {
-              @genre.Name <br />
-            }
-          </td>
-          <td class="text-right"> @film.Year </td>
-          <td>
-            @foreach (var country in film.Countries)
-            {
-              @country.Name <br />
-            }
-          </td>
-          <td class="text-right"> @film.Rate </td>
-          <td class="text-right"> @film.Price.ToString("# $")</td>
-          <td class="text-right">
-            <form asp-action="ChangeQuantity" method="post">
-              <input hidden type="hidden" asp-for="@film.Id" />
-              <input hidden type="hidden" asp-for="@film.Name" />
-              <input type="number" asp-for="@film.QuantityInStock" style="width:4rem" onchange="this.form.submit()"/>
-            </form>
-          </td>
-          <td>
-            <a asp-action="Edit" asp-route-id="@film.Id" class="btn btn-default btn-xs">Edit</a>
-            <a asp-action="DeleteFilm" asp-route-id="@film.Id" class="btn btn-default btn-xs">Delete</a>
-          </td>
-        </tr>
-      }
-    </table>
-  </div>
-
+    Country:
+    <select class="custom-select searchClass" style="width:auto" name="CountryId" asp-items="@ViewBag.Countries">
+      <option value="">All</option>
+    </select>
+    <br />
+    <label>Title: </label>
+    <input class="searchClass" type="text" placeholder="Title" name="SearchString" />
+    <label> Producer: </label>
+    <input class="searchClass" type="text" placeholder="Producer" name="ProducerName" />
+    <br />
+    <label>Year: </label>
+    <input class="searchClass" type="number" placeholder="From" name="YearFrom" style="width:4rem" />
+    <input class="searchClass" type="number" placeholder="To" name="YearTo" style="width:4rem" />
+    <input class="btn btn-secondary" type="submit" value="Filter" onclick="Filter()" />
+  </p>
+  @*</form>*@
+  <div class="panel-body"></div>
+  
   <div class="panel-footer">
     <a asp-action="AddFilm" class="btn btn-secondary">Add film</a>
   </div>
@@ -80,4 +44,9 @@
 
 @section Scripts {
   @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+<script type="text/javascript">
+  $(document).ready(function () {
+    Filter();
+  });
+</script>
 }

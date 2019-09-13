@@ -12,16 +12,16 @@ namespace FilmStore.WEB.Controllers
   [Authorize]
   public class OrderController : Controller
   {
-    private readonly IOrderService orderService;
+    private readonly IOrderService _orderService;
     public OrderController(IOrderService orderService)
     {
-      this.orderService = orderService;
+      this._orderService = orderService;
     }
 
     public IActionResult Cart()
     {
       decimal sum = 0;
-      IEnumerable<FilmDTO> films = orderService.GetFilmsFromCart(HttpContext, "CartFilms");
+      IEnumerable<FilmDTO> films = _orderService.GetFilmsFromCart(HttpContext, "CartFilms");
       if (films == null)
         return View(null);
       IEnumerable<FilmDTO> filmsDistinct = films.GroupBy(film => film.Id).Select(group => group.FirstOrDefault());
@@ -41,7 +41,7 @@ namespace FilmStore.WEB.Controllers
 
     public IActionResult AddToCart(int id, [FromQuery]int count, [FromQuery]string returnUrl)
     {
-      FilmDTO film = orderService.GetFilm(id);
+      FilmDTO film = _orderService.GetFilm(id);
       List<FilmDTO> films = new List<FilmDTO>();
 
       if (returnUrl == null)
@@ -52,7 +52,7 @@ namespace FilmStore.WEB.Controllers
         films.Add(film);
       }
 
-      orderService.AddFilmsToCart(HttpContext, "CartFilms", films);
+      _orderService.AddFilmsToCart(HttpContext, "CartFilms", films);
       if (returnUrl.Contains("Cart"))
         return RedirectToAction("Cart");
       return Redirect(returnUrl);
@@ -60,22 +60,30 @@ namespace FilmStore.WEB.Controllers
 
     public IActionResult RemoveFromCart(int id, [FromQuery]bool first)
     {
-      orderService.RemoveFromCart(HttpContext, "CartFilms", first, f => f.Id == id);
+      _orderService.RemoveFromCart(HttpContext, "CartFilms", first, f => f.Id == id);
       return RedirectToAction("Cart");
     }
 
     public IActionResult Products()
     {
-      IEnumerable<FilmDTO> filmDTOs = orderService.GetFilms();
+      IEnumerable<FilmDTO> filmDTOs = _orderService.GetFilms();
       var mapper = MapperService.CreateFilmDTOToFilmViewModelMapper();
       var films = mapper.Map<IEnumerable<FilmDTO>, List<FilmViewModel>>(filmDTOs);
       return View(films);
+    }
+      
+    public IActionResult Search(string searchString)
+    {
+      var mapper = MapperService.CreateFilmDTOToFilmViewModelMapper();
+      var filmDTOs = _orderService.GetFilms();
+      var filmViewModels = mapper.Map<IEnumerable<FilmDTO>, IEnumerable<FilmViewModel>>(filmDTOs);
+      return PartialView(filmViewModels);
     }
 
     public IActionResult MakeOrder()
     {
       TempData["message"] = $"Your order has been sent for review.";
-      orderService.AddPurchase(HttpContext, "CartFilms");
+      _orderService.AddPurchase(HttpContext, "CartFilms");
       return RedirectToAction("Cart");
     }
   }

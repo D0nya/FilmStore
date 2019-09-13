@@ -18,24 +18,28 @@ namespace FilmStore.WEB.Controllers
     private readonly IOrderService _orderService;
     private readonly IAdminService _adminService;
     private readonly IEmailSender _emailSender;
+    private IEnumerable<SelectListItem> genres;
+    private IEnumerable<SelectListItem> producers;
+    private IEnumerable<SelectListItem> countries;
     public AdminController(IOrderService orderService, IAdminService adminService, IEmailSender emailSender)
     {
       _orderService = orderService;
       _adminService = adminService;
       _emailSender = emailSender;
+
+      genres = _adminService.GetGenres().Select(g => new SelectListItem(g.Name, g.Id.ToString()));
+      producers = _adminService.GetProducers().Select(p => new SelectListItem(p.Name, p.Id.ToString()));
+      countries = _adminService.GetCountries().Select(c => new SelectListItem(c.Name, c.Id.ToString()));
     }
-    public IActionResult Admin(string genreId, string searchString)
+    public IActionResult Admin()
     {
       IEnumerable<FilmDTO> filmDTOs = _orderService.GetFilms();
 
-      ViewBag.Genres = _adminService.GetGenres().Select(g => new SelectListItem(g.Name, g.Id.ToString()));
+      ViewBag.Genres = genres;
+      ViewBag.Countries = countries;
 
       var mapper = MapperService.CreateFilmDTOToFilmViewModelMapper();
       var films = mapper.Map<IEnumerable<FilmDTO>, List<FilmViewModel>>(filmDTOs);
-      if(searchString != null)
-        films = films.Where(f => f.Name.ToUpper().Contains(searchString.ToUpper())).ToList();
-      if (genreId != null)
-        films = films.Where(f => f.Genres.Any(g => g.Id.ToString() == genreId)).ToList();
       return View(films);
     }
     public ViewResult Edit(int Id)
@@ -45,9 +49,9 @@ namespace FilmStore.WEB.Controllers
 
       var filmViewModel = mapper.Map<FilmDTO, FilmViewModel>(film);
 
-      ViewBag.Genres = _adminService.GetGenres().Select(g => new SelectListItem(g.Name, g.Id.ToString()));
-      ViewBag.Producers = _adminService.GetProducers().Select(p => new SelectListItem(p.Name, p.Id.ToString()));
-      ViewBag.Countries = _adminService.GetCountries().Select(c => new SelectListItem(c.Name, c.Id.ToString()));
+      ViewBag.Genres = genres;
+      ViewBag.Producers = producers;
+      ViewBag.Countries = countries;
       return View(filmViewModel);
     }
 
@@ -55,7 +59,7 @@ namespace FilmStore.WEB.Controllers
     public IActionResult Edit(FilmViewModel filmViewModel)
     {
       var mapper = MapperService.CreateFilmViewModelToFilmDTOMapper();
-      if(ModelState.IsValid)
+      if (ModelState.IsValid)
       {
         var filmDTO = mapper.Map<FilmViewModel, FilmDTO>(filmViewModel);
         _adminService.SaveFilm(filmDTO);
@@ -63,12 +67,7 @@ namespace FilmStore.WEB.Controllers
         return RedirectToAction("Admin");
       }
       else
-      {
-        ViewBag.Genres = _adminService.GetGenres().Select(g => new SelectListItem(g.Name, g.Id.ToString()));
-        ViewBag.Producers = _adminService.GetProducers().Select(p => new SelectListItem(p.Name, p.Id.ToString()));
-        ViewBag.Countries = _adminService.GetCountries().Select(c => new SelectListItem(c.Name, c.Id.ToString()));
-        return View(filmViewModel);
-      }
+        return RedirectToAction("Edit");
     }
 
     [HttpPost]
@@ -83,9 +82,9 @@ namespace FilmStore.WEB.Controllers
 
     public ViewResult AddFilm()
     {
-      ViewBag.Genres = _adminService.GetGenres().Select(g => new SelectListItem(g.Name, g.Id.ToString()));
-      ViewBag.Producers = _adminService.GetProducers().Select(p => new SelectListItem(p.Name, p.Id.ToString()));
-      ViewBag.Countries = _adminService.GetCountries().Select(c => new SelectListItem(c.Name, c.Id.ToString()));
+      ViewBag.Genres = genres;
+      ViewBag.Producers = producers;
+      ViewBag.Countries = countries;
       return View();
     }
 
@@ -101,12 +100,7 @@ namespace FilmStore.WEB.Controllers
         return RedirectToAction("Admin");
       }
       else
-      {
-        ViewBag.Genres = _adminService.GetGenres().Select(g => new SelectListItem(g.Name, g.Id.ToString()));
-        ViewBag.Producers = _adminService.GetProducers().Select(p => new SelectListItem(p.Name, p.Id.ToString()));
-        ViewBag.Countries = _adminService.GetCountries().Select(c => new SelectListItem(c.Name, c.Id.ToString()));
-        return View(filmViewModel);
-      }
+        return RedirectToAction("AddFilm");
     }
 
     public IActionResult DeleteFilm(int id)

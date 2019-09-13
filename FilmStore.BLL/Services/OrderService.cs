@@ -100,7 +100,7 @@ namespace FilmStore.BLL.Services
       if(name != null)
       {
         int userId = Database.Customers.Find(c => c.Name == name).First().Id;
-        purchases = purchases.Where(p => p.Id == userId);
+        purchases = purchases.Where(p => p.Customer.Id == userId);
       }
 
       return purchases;
