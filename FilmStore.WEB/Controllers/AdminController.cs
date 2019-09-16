@@ -18,9 +18,9 @@ namespace FilmStore.WEB.Controllers
     private readonly IOrderService _orderService;
     private readonly IAdminService _adminService;
     private readonly IEmailSender _emailSender;
-    private IEnumerable<SelectListItem> genres;
-    private IEnumerable<SelectListItem> producers;
-    private IEnumerable<SelectListItem> countries;
+    private readonly IEnumerable<SelectListItem> genres;
+    private readonly IEnumerable<SelectListItem> producers;
+    private readonly IEnumerable<SelectListItem> countries;
     public AdminController(IOrderService orderService, IAdminService adminService, IEmailSender emailSender)
     {
       _orderService = orderService;
@@ -33,14 +33,9 @@ namespace FilmStore.WEB.Controllers
     }
     public IActionResult Admin()
     {
-      IEnumerable<FilmDTO> filmDTOs = _orderService.GetFilms();
-
       ViewBag.Genres = genres;
       ViewBag.Countries = countries;
-
-      var mapper = MapperService.CreateFilmDTOToFilmViewModelMapper();
-      var films = mapper.Map<IEnumerable<FilmDTO>, List<FilmViewModel>>(filmDTOs);
-      return View(films);
+      return View();
     }
     public ViewResult Edit(int Id)
     {
@@ -134,9 +129,7 @@ namespace FilmStore.WEB.Controllers
       TempData["message"] = $"Purchase #{purchase.Id}. Status: {purchase.Status}.";
 
       if(purchase.Status != Status.Pending)
-      {
         _emailSender.SendEmailAsync(purchase.Customer.User.Email, "Purchase status", $"Your purchase #{purchase.Id} was {purchase.Status}");
-      }
 
       return RedirectToAction("Purchases");
     }

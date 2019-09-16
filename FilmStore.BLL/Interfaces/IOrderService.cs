@@ -8,7 +8,9 @@ namespace FilmStore.BLL.Interfaces
   public interface IOrderService
   {
     FilmDTO GetFilm(int id);
-    IEnumerable<FilmDTO> GetFilms();
+    IEnumerable<FilmDTO> GetFilms(string searchString = null, string genre=null, string country=null, 
+      string producer = null, string yearFrom = null, string yearTo = null, int page = 1, int pageSize = 3,
+      SortState sortOrder = SortState.NameAsc);
 
     IEnumerable<FilmDTO> GetFilmsFromCart(HttpContext context, string key);
     void AddFilmsToCart(HttpContext context, string key, IEnumerable<FilmDTO> films);
@@ -17,6 +19,8 @@ namespace FilmStore.BLL.Interfaces
     void AddPurchase(HttpContext context, string key);
 
     IEnumerable<PurchaseDTO> GetPurchases(string name = null);
+
+    int FilmsCount();
 
     void Dispose();
   }

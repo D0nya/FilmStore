@@ -1,23 +1,24 @@
-﻿@model IEnumerable<FilmViewModel>
+﻿@model TableViewModel<FilmViewModel>
 
   <div id="searchResult">
+    @Model.SortViewModel.Current
     <table class="table table-striped table-condensed table-bordered">
       <thead>
         <tr>
-          <th onclick="Filter(0)" class="text-right">Id</th>
-          <th onclick="Filter(1)">Title</th>
-          <th onclick="Filter(2)">Producer</th>
+          <th class="text-right">Id</th>
+          <th onclick="Filter(@Model.PageViewModel.PageNumber, '@Model.SortViewModel.NameSort')">Title</th>
+          <th onclick="Filter(@Model.PageViewModel.PageNumber, '@Model.SortViewModel.ProducerSort')">Producer</th>
           <th>Genre</th>
-          <th onclick="Filter(3)" class="text-right">Year</th>
+          <th onclick="Filter(@Model.PageViewModel.PageNumber, '@Model.SortViewModel.YearSort')" class="text-right">Year</th>
           <th>Country</th>
-          <th onclick="Filter(4)" class="text-right" >Rate</th>
-          <th onclick="Filter(5)" class="text-right" >Price</th>
-          <th onclick="Filter(6)" class="text-center"><i>Quantity</i></th>
+          <th onclick="Filter(@Model.PageViewModel.PageNumber, '@Model.SortViewModel.RateSort')" class="text-right" >Rate</th>
+          <th onclick="Filter(@Model.PageViewModel.PageNumber, '@Model.SortViewModel.PriceSort')" class="text-right" >Price</th>
+          <th onclick="Filter(@Model.PageViewModel.PageNumber, '@Model.SortViewModel.QuantitySort')" class="text-center"><i>Quantity</i></th>
           <th class="text-center">Action</th>
         </tr>
       </thead>
       <tbody>
-        @foreach (var film in Model)
+        @foreach (var film in Model.Items)
         {
           <tr>
             <td class="text-right"> @film.Id </td>
@@ -53,4 +54,19 @@
         }
       </tbody>
     </table>
-  </div>
+    <div class="row align-content-center">
+      <div class="col-lg-1">
+        @if(Model.PageViewModel.HasPreviousPage)
+        { 
+        <a role="button" class="btn btn-light" onclick="Filter(@Model.PageViewModel.PageNumber - 1)">Previous</a>
+        }
+      </div>
+      <div class="col-lg-2">
+        @if (Model.PageViewModel.HasNextPage)
+        {
+          <a role="button" class="btn btn-light" onclick="Filter(@Model.PageViewModel.PageNumber + 1)">Next</a>
+        }
+      </div>
+    </div>
+      <hr />
+    </div>

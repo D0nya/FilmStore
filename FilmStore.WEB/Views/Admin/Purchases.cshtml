@@ -7,40 +7,46 @@
 
   <div class="panel-heading">
     <h3><a asp-action="Admin" asp-controller="Admin">Films</a> Purchases</h3>
+    @*<p>
+      <label>User name: </label>
+      <input class="searchClass" type="text" placeholder="Title" name="SearchString" />
+      <br />
+      <input class="btn btn-secondary" type="submit" value="Filter" onclick="Filter()" />
+    </p>*@
   </div>
-
   <div class="panel-body">
     <table class="table table-striped table-condensed table-bordered">
+    <tr>
+      <td>Order number</td>
+      <td>Customer</td>
+      <td>Films</td>
+      <td>Date</td>
+      <td>Status</td>
+    </tr>
+
+    @foreach (var purchase in Model)
+    {
       <tr>
-        <td>Id</td>
-        <td>Customer</td>
-        <td>Films</td>
-        <td>Date</td>
-        <td>Status</td>
+        <td>@purchase.Id</td>
+        <td>@purchase.Customer.FirstName @purchase.Customer.LastName (@purchase.Customer.Name)</td>
+        <td>
+          @for (int i = 0; i < purchase.Films.Length; i++)
+          {
+            <label>@purchase.Films[i].Name (@purchase.Quantity[i])</label><br />
+          }
+        </td>
+        <td>
+          @purchase.Date
+        </td>
+        <td>
+          <form asp-action="SubmitPurchase" method="post">
+            <input type="hidden" hidden asp-for="@purchase.Id" />
+            <input type="hidden" hidden asp-for="@purchase.Customer.User.Email" />
+            <select asp-for="@purchase.Status" asp-items="@ViewBag.Status" class="custom-select" onchange="this.form.submit()"></select>
+          </form>
+        </td>
       </tr>
-      @foreach (var purchase in Model)
-      {
-          <tr>
-            <td>@purchase.Id</td>
-            <td>@purchase.Customer.FirstName @purchase.Customer.LastName (@purchase.Customer.Name)</td>
-            <td>
-              @for (int i = 0; i < purchase.Films.Length; i++)
-              {
-                <label>@purchase.Films[i].Name (@purchase.Quantity[i])</label><br />
-              }
-            </td>
-            <td>
-              @purchase.Date
-            </td>
-            <td>
-              <form asp-action="SubmitPurchase" method="post">
-                <input type="hidden" hidden asp-for="@purchase.Id" />
-                <input type="hidden" hidden asp-for="@purchase.Customer.User.Email" />
-                <select asp-for="@purchase.Status" asp-items="@ViewBag.Status" class="custom-select" onchange="this.form.submit()"></select>
-              </form>
-            </td>
-        </tr>
-      }
+    }
     </table>
   </div>
 </div>

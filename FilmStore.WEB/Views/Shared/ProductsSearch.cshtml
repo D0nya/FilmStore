@@ -1,0 +1,49 @@
+﻿@model TableViewModel<FilmViewModel>
+
+  <div id="searchResult">
+    @foreach (var film in Model.Items)
+    {
+      <div class="film">
+        <hr />
+        <div class="card-title">
+          <h4>@film.Name</h4>
+        </div>
+        <div class="info">
+          <p>Producer: @film.Producer.Name</p>
+          <p>
+            Genres: @foreach (var genre in film.Genres)
+            {
+            <label>@genre.Name </label>
+            }
+          </p>
+          <p>
+            Countires: @foreach (var country in film.Countries)
+            {
+            <label>@country.Name </label>
+            }
+          </p>
+          <p>Year: @film.Year</p>
+        </div>
+        <div class="card-footer">
+          <label style="float:left; width:50%">IMDb: @film.Rate</label>
+          <label style="text-align:right; width:auto"><b>@film.Price$</b></label>
+          <input type="number" style="width:100px" value="1" />
+          <a class="btn btn-primary" role="button" href="~/Order/AddToCart/@film.Id?count=1&returnUrl=@Context.Request.Host@Context.Request.Path">Add to cart</a>
+        </div>
+      </div>
+    }
+    <div class="row align-content-center">
+      <div class="col-lg-1">
+        @if (Model.PageViewModel.HasPreviousPage)
+        {
+          <a role="button" class="btn btn-light" onclick="Filter(@Model.PageViewModel.PageNumber - 1)">Previous</a>
+        }
+      </div>
+      <div class="col-lg-2">
+        @if (Model.PageViewModel.HasNextPage)
+        {
+          <a role="button" class="btn btn-light" onclick="Filter(@Model.PageViewModel.PageNumber + 1)">Next</a>
+        }
+      </div>
+    </div>
+  </div>

@@ -1,9 +1,11 @@
 ﻿using FilmStore.BLL.DTO;
 using FilmStore.BLL.Interfaces;
 using FilmStore.WEB.Models;
+using FilmStore.WEB.Models.TableLogic;
 using FilmStore.WEB.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -13,9 +15,17 @@ namespace FilmStore.WEB.Controllers
   public class OrderController : Controller
   {
     private readonly IOrderService _orderService;
-    public OrderController(IOrderService orderService)
+    private readonly IAdminService _adminService;
+    private readonly IEnumerable<SelectListItem> genres;
+    private readonly IEnumerable<SelectListItem> producers;
+    private readonly IEnumerable<SelectListItem> countries;
+    public OrderController(IOrderService orderService, IAdminService adminService)
     {
-      this._orderService = orderService;
+      _orderService = orderService;
+      _adminService = adminService;
+      genres = _adminService.GetGenres().Select(g => new SelectListItem(g.Name, g.Id.ToString()));
+      producers = _adminService.GetProducers().Select(p => new SelectListItem(p.Name, p.Id.ToString()));
+      countries = _adminService.GetCountries().Select(c => new SelectListItem(c.Name, c.Id.ToString()));
     }
 
     public IActionResult Cart()
@@ -66,18 +76,36 @@ namespace FilmStore.WEB.Controllers
 
     public IActionResult Products()
     {
-      IEnumerable<FilmDTO> filmDTOs = _orderService.GetFilms();
-      var mapper = MapperService.CreateFilmDTOToFilmViewModelMapper();
-      var films = mapper.Map<IEnumerable<FilmDTO>, List<FilmViewModel>>(filmDTOs);
-      return View(films);
+      ViewBag.Genres = genres;
+      ViewBag.Countries = countries;
+      return View();
     }
       
-    public IActionResult Search(string searchString)
+    public IActionResult Search(string searchString, string genre, string country, string producer, 
+      string yearFrom, string yearTo, string returnUrl, int page = 1, SortState sortOrder = SortState.NameAsc)
     {
+      int pageSize = 5;
+
       var mapper = MapperService.CreateFilmDTOToFilmViewModelMapper();
-      var filmDTOs = _orderService.GetFilms();
+      var filmDTOs = _orderService.GetFilms(searchString, genre, country, producer,yearFrom,yearTo, page,pageSize,sortOrder);
       var filmViewModels = mapper.Map<IEnumerable<FilmDTO>, IEnumerable<FilmViewModel>>(filmDTOs);
-      return PartialView(filmViewModels);
+
+      TableViewModel<FilmViewModel> res = new TableViewModel<FilmViewModel>
+      {
+        PageViewModel = new PageViewModel(_orderService.FilmsCount(), page, pageSize),
+        SortViewModel = new SortViewModel(sortOrder),
+        Items = filmViewModels
+      };
+
+      switch (returnUrl)
+      {
+        case "/Admin/Admin":
+          return PartialView("Search", res);
+        case "/Order/Products":
+          return PartialView("ProductsSearch", res);
+        default:
+          return Redirect("~/Home/Index");
+      }
     }
 
     public IActionResult MakeOrder()

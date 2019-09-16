@@ -1,45 +1,50 @@
 ﻿@model IEnumerable<FilmViewModel>
-@{
-  ViewData["Title"] = "Products";
-}
+
 <!DOCTYPE html>
 <html>
 <head>
-  <title>@ViewData["Title"]</title>
+  <title>"Products"</title>
   <script src="~/lib/jquery/dist/jquery.min.js"></script>
 </head>
 
 <body>
-  @foreach (var film in Model)
-  {
-    <div class="film">
-      <div class="card-title">
-        <h4>@film.Name</h4>
-      </div>
-      <div class="info">
-        <p>Producer: @film.Producer.Name</p>
-        <p>
-          Genres: @foreach (var genre in film.Genres)
-          {
-            @genre.Name
-          }
-        </p>
-        <p>
-          Countires: @foreach (var country in film.Countries)
-          {
-            @country.Name
-          }
-        </p>
-        <p>Year: @film.Year</p>
-      </div>
-      <div class="card-footer">
-        <label style="float:left; width:50%">IMDb: @film.Rate</label>
-        <label style="text-align:right; width:auto"><b>@film.Price$</b></label>
-        <input type="number" style="width:100px" value="1" />
-        <a class="btn btn-primary" role="button" href="~/Order/AddToCart/@film.Id?count=1&returnUrl=@Context.Request.Host@Context.Request.Path">Add to cart</a>
-      </div>
-    </div>
-  }
+  <h2>Products</h2>
+  <hr />
+  <div class="filter-panel">
+    <p>
+      Genre:
+      <select class="custom-select searchClass" style="width:auto" name="GenreId" asp-items="@ViewBag.Genres">
+        <option value="">All</option>
+      </select>
+
+      Country:
+      <select class="custom-select searchClass" style="width:auto" name="CountryId" asp-items="@ViewBag.Countries">
+        <option value="">All</option>
+      </select>
+      <br />
+      <label>Title: </label>
+      <input class="searchClass" type="text" placeholder="Title" name="SearchString" />
+      <label> Producer: </label>
+      <input class="searchClass" type="text" placeholder="Producer" name="ProducerName" />
+      <br />
+      <label>Year: </label>
+      <input class="searchClass" type="number" placeholder="From" name="YearFrom" style="width:4rem" />
+      <input class="searchClass" type="number" placeholder="To" name="YearTo" style="width:4rem" />
+      <input class="btn btn-secondary" type="submit" value="Filter" onclick="Filter()" />
+    </p>
+  </div>
+  <div class="panel-body"></div>
+</body>
+
+</html>
+
+@section Scripts {
+  @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+<script>
+  $(document).ready(function () {
+    Filter();
+  });
+</script>
   <script>
     $('div.film>div.card-footer>input').on(
       {
@@ -52,10 +57,4 @@
         }
       })
   </script>
-</body>
-
-</html>
-
-@section Scripts {
-  @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
