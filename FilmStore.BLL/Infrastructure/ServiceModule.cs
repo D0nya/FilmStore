@@ -6,7 +6,6 @@ using FilmStore.DAL.Entities;
 using FilmStore.DAL.Interfaces;
 using FilmStore.DAL.Repositories;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 
@@ -17,13 +16,13 @@ namespace FilmStore.BLL.Infrastructure
     public static IServiceCollection Services { get; set; }
     public static IServiceProvider Provider { get; private set; }
 
-    public static void Load(DbContextOptions options)
+    public static void Load()
     {
       Services.AddIdentity<User, IdentityRole>()
         .AddEntityFrameworkStores<FilmStoreContext>()
         .AddDefaultTokenProviders();
 
-      Services.AddSingleton(options);
+      // Ошибка, если менять на AddSingleton
       Services.AddScoped<IUnitOfWork, EFUnitOfWork>();
       Services.AddScoped<IOrderService, OrderService>();
       Services.AddScoped<IUserService, UserService>();

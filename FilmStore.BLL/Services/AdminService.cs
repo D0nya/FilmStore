@@ -4,6 +4,7 @@ using FilmStore.BLL.Interfaces;
 using FilmStore.DAL.Entities;
 using FilmStore.DAL.Interfaces;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace FilmStore.BLL.Services
 {
@@ -48,18 +49,18 @@ namespace FilmStore.BLL.Services
       return producers;
     }
 
-    public void ChangeQuantityInStock(FilmDTO filmDTO)
+    public async void ChangeQuantityInStock(FilmDTO filmDTO)
     {
-      Film film = Database.Films.Get(filmDTO.Id);
+      Film film = await Database.Films.Get(filmDTO.Id);
       if(film != null)
       {
         film.QuantityInStock = filmDTO.QuantityInStock;
         Database.Films.Update(film);
-        Database.SaveAsync().Wait();
+        await Database.SaveAsync();
       }
     }
 
-    public void SaveFilm(FilmDTO filmDTO)
+    public async void SaveFilm(FilmDTO filmDTO)
     {
       Film film;
 
@@ -77,14 +78,14 @@ namespace FilmStore.BLL.Services
           Genres = new List<FilmGenre>()
         };
 
-        film.Producer = Database.Producers.Get(filmDTO.ProducerId);
+        film.Producer = await Database.Producers.Get(filmDTO.ProducerId);
         foreach (int countryId in filmDTO.CountriesId)
         {
           film.Countries.Add(new FilmCountry
           {
             Film = film,
             FilmId = film.Id,
-            Country = Database.Countries.Get(countryId),
+            Country = await Database.Countries.Get(countryId),
             CountryId = countryId
           });
         }
@@ -94,7 +95,7 @@ namespace FilmStore.BLL.Services
           {
             Film = film,
             FilmId = film.Id,
-            Genre = Database.Genres.Get(genreId),
+            Genre = await Database.Genres.Get(genreId),
             GenreId = genreId
           });
         }
@@ -102,7 +103,7 @@ namespace FilmStore.BLL.Services
       }
       else
       {
-        film = Database.Films.Get(filmDTO.Id);
+        film = await Database.Films.Get(filmDTO.Id);
         if(film != null)
         {
           film.Name = filmDTO.Name;
@@ -110,7 +111,7 @@ namespace FilmStore.BLL.Services
           film.Year = filmDTO.Year;
           film.Rate = filmDTO.Rate;
           film.QuantityInStock = filmDTO.QuantityInStock;
-          film.Producer = Database.Producers.Get(filmDTO.ProducerId);
+          film.Producer = await Database.Producers.Get(filmDTO.ProducerId);
 
           film.Countries.Clear();
           foreach (int countryId in filmDTO.CountriesId)
@@ -119,7 +120,7 @@ namespace FilmStore.BLL.Services
             {
               Film = film,
               FilmId = film.Id,
-              Country = Database.Countries.Get(countryId),
+              Country = await Database.Countries.Get(countryId),
               CountryId = countryId
             });
           }
@@ -131,19 +132,19 @@ namespace FilmStore.BLL.Services
             {
               Film = film,
               FilmId = film.Id,
-              Genre = Database.Genres.Get(genreId),
+              Genre = await Database.Genres.Get(genreId),
               GenreId = genreId
             });
           }
         }
         Database.Films.Update(film);
       }
-      Database.SaveAsync().Wait();
+      await Database.SaveAsync();
     }
 
-    public void SavePurchase(PurchaseDTO purchaseDTO)
+    public async void SavePurchase(PurchaseDTO purchaseDTO)
     {
-      Purchase purchase = Database.Purchases.Get(purchaseDTO.Id);
+      Purchase purchase = await Database.Purchases.Get(purchaseDTO.Id);
       if(purchase != null)
       {
         purchase.Status = purchaseDTO.Status;
@@ -153,24 +154,24 @@ namespace FilmStore.BLL.Services
         {
           foreach (var film in purchase.Films)
           {
-            Database.Films.Get(film.FilmId).QuantityInStock -= film.Quantity;
+            (await Database.Films.Get(film.FilmId)).QuantityInStock -= film.Quantity;
             Database.Films.Update(film.Film);
           }
         }
 
-        Database.SaveAsync().Wait();
+        await Database.SaveAsync();
       }
     }
 
-    public void DeleteFilm(int id)
+    public async void DeleteFilm(int id)
     {
       Database.Films.Delete(id);
-      Database.SaveAsync().Wait();
+      await Database.SaveAsync();
     }
 
-    public FilmDTO GetFilm(int id)
+    public async Task<FilmDTO> GetFilm(int id)
     {
-      var film = Database.Films.Get(id);
+      var film = await Database.Films.Get(id);
       var mapper = MapperService.CreateFilmToFilmDTOMapper();
       var films = mapper.Map<Film, FilmDTO>(film);
       return films;

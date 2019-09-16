@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace FilmStore.WEB.Controllers
 {
@@ -37,9 +38,9 @@ namespace FilmStore.WEB.Controllers
       ViewBag.Countries = countries;
       return View();
     }
-    public ViewResult Edit(int Id)
+    public async Task<ViewResult> Edit(int Id)
     {
-      var film = _orderService.GetFilm(Id);
+      var film = await _orderService.GetFilm(Id);
       var mapper = MapperService.CreateFilmDTOToFilmViewModelMapper();
 
       var filmViewModel = mapper.Map<FilmDTO, FilmViewModel>(film);
@@ -98,9 +99,9 @@ namespace FilmStore.WEB.Controllers
         return RedirectToAction("AddFilm");
     }
 
-    public IActionResult DeleteFilm(int id)
+    public async Task<IActionResult> DeleteFilm(int id)
     {
-      string filmName = _adminService.GetFilm(id).Name;
+      string filmName = (await _adminService.GetFilm(id)).Name;
       _adminService.DeleteFilm(id);
       TempData["message"] = $"Film {filmName} was deleted successfully.";
       return RedirectToAction("Admin");

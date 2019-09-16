@@ -35,12 +35,10 @@ namespace FilmStore.WEB
       string connection = Configuration.GetConnectionString("DefaultConnection");
       services.AddDbContext<FilmStoreContext>(options => options
       .UseSqlServer(connection)
-      .UseLazyLoadingProxies());
+      .UseLazyLoadingProxies(), ServiceLifetime.Singleton);
 
-      var opt = new DbContextOptionsBuilder();
-      opt.UseSqlServer(connection).UseLazyLoadingProxies();
       ServiceModule.Services = services; 
-      ServiceModule.Load(opt.Options);
+      ServiceModule.Load();
       
       services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
       .AddRazorPagesOptions(options =>

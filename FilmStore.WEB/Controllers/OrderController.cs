@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace FilmStore.WEB.Controllers
 {
@@ -49,9 +50,9 @@ namespace FilmStore.WEB.Controllers
       return View(viewFilms);
     }
 
-    public IActionResult AddToCart(int id, [FromQuery]int count, [FromQuery]string returnUrl)
+    public async Task<IActionResult> AddToCart(int id, [FromQuery]int count, [FromQuery]string returnUrl)
     {
-      FilmDTO film = _orderService.GetFilm(id);
+      FilmDTO film = await _orderService.GetFilm(id);
       List<FilmDTO> films = new List<FilmDTO>();
 
       if (returnUrl == null)

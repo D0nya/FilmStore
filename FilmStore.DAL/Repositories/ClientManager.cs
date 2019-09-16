@@ -1,6 +1,7 @@
 ﻿using FilmStore.DAL.Interfaces;
 using FilmStore.DAL.EF;
 using FilmStore.DAL.Entities;
+using System.Threading.Tasks;
 
 namespace FilmStore.DAL.Repositories
 {
@@ -12,10 +13,10 @@ namespace FilmStore.DAL.Repositories
       Database = context;
     }
 
-    public void Create(Customer item)
+    public async void Create(Customer item)
     {
-      Database.Customers.Add(item);
-      Database.SaveChanges();
+      await Database.Customers.AddAsync(item);
+      await Database.SaveChangesAsync();
     }
 
     public void Dispose()

@@ -4,6 +4,7 @@ using FilmStore.DAL.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace FilmStore.DAL.Repositories
 {
@@ -15,13 +16,13 @@ namespace FilmStore.DAL.Repositories
       db = context;
     }
 
-    public void Create(Producer item)
+    public async void Create(Producer item)
     {
-      db.Producers.Add(item);
+      await db.Producers.AddAsync(item);
     }
-    public void Delete(int id)
+    public async void Delete(int id)
     {
-      Producer producer = db.Producers.Find(id);
+      Producer producer = await db.Producers.FindAsync(id);
       if (producer != null)
         db.Producers.Remove(producer);
     }
@@ -29,9 +30,9 @@ namespace FilmStore.DAL.Repositories
     {
       return db.Producers.Where(predicate).ToList();
     }
-    public Producer Get(int id)
+    public async Task<Producer> Get(int id)
     {
-      return db.Producers.Find(id);
+      return await db.Producers.FindAsync(id);
     }
     public IEnumerable<Producer> GetAll()
     {

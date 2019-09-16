@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace FilmStore.BLL.Services
 {
@@ -19,17 +20,15 @@ namespace FilmStore.BLL.Services
       Database = unitOfWork;
     }
 
-    public FilmDTO GetFilm(int id)
+    public async Task<FilmDTO> GetFilm(int id)
     {
-      var film = Database.Films.Get(id);
+      var film = await Database.Films.Get(id);
       if (film == null)
         throw new ValidationException("Film not found", $"Id: {id}");
       var mapper = MapperService.CreateFilmToFilmDTOMapper();
       var filmDto = mapper.Map<Film, FilmDTO>(film);
       return filmDto;
     }
-
-
 
     public IEnumerable<FilmDTO> GetFilmsFromCart(HttpContext context, string key)
     {
@@ -59,7 +58,7 @@ namespace FilmStore.BLL.Services
       context.Session.Set(key, films);
     }
 
-    public void AddPurchase(HttpContext context, string key)
+    public async void AddPurchase(HttpContext context, string key)
     {
       List<FilmPurchase> films = new List<FilmPurchase>();
       List<FilmDTO> filmDTOs = GetFilmsFromCart(context, key).ToList();
@@ -73,7 +72,7 @@ namespace FilmStore.BLL.Services
         films.Add(new FilmPurchase
         {
           FilmId = item.Key,
-          Film = Database.Films.Get(item.Key),
+          Film = await Database.Films.Get(item.Key),
           Quantity = item.Count(),
           PurchaseId = purchase.Id,
           Purchase = purchase
@@ -82,7 +81,7 @@ namespace FilmStore.BLL.Services
       purchase.Films = films;
       Database.Purchases.Create(purchase);
 
-      Database.SaveAsync().Wait();
+      await Database.SaveAsync();
       context.Session.Clear();
     }
 
