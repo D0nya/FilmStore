@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using FilmStore.BLL.DTO;
 using FilmStore.DAL.Entities;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace FilmStore.BLL.Services

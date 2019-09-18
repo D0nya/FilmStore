@@ -32,7 +32,7 @@ namespace FilmStore.BLL.Services
         await Database.UserManager.AddToRoleAsync(user, userDto.Role);
 
         Customer customer = new Customer { Name = userDto.UserName, UserRef = user.Id, Purchases = new List<Purchase>() };
-        Database.ClientManager.Create(customer);
+        await Database.ClientManager.Create(customer);
 
         await Database.SignInManager.SignInAsync(user, isPersistent: false);
         return new OperationDetails(true, "Registration finished successfully", "");

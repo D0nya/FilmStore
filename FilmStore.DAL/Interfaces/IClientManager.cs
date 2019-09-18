@@ -6,6 +6,6 @@ namespace FilmStore.DAL.Interfaces
 {
   public interface IClientManager : IDisposable
   {
-    void Create(Customer item);
+    Task Create(Customer item);
   }
 }

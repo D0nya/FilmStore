@@ -13,7 +13,7 @@ namespace FilmStore.DAL.Repositories
       Database = context;
     }
 
-    public async void Create(Customer item)
+    public async Task Create(Customer item)
     {
       await Database.Customers.AddAsync(item);
       await Database.SaveChangesAsync();

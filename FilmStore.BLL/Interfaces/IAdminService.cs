@@ -12,9 +12,9 @@ namespace FilmStore.BLL.Interfaces
 
     Task<FilmDTO> GetFilm(int id);
 
-    void SaveFilm(FilmDTO filmDTO);
-    void SavePurchase(PurchaseDTO purchaseDTO);
-    void ChangeQuantityInStock(FilmDTO filmDTO);
-    void DeleteFilm(int id);
+    Task SaveFilm(FilmDTO filmDTO);
+    Task SavePurchase(PurchaseDTO purchaseDTO);
+    Task ChangeQuantityInStock(FilmDTO filmDTO);
+    Task DeleteFilm(int id);
   }
 }

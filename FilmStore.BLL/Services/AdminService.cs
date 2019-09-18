@@ -49,7 +49,7 @@ namespace FilmStore.BLL.Services
       return producers;
     }
 
-    public async void ChangeQuantityInStock(FilmDTO filmDTO)
+    public async Task ChangeQuantityInStock(FilmDTO filmDTO)
     {
       Film film = await Database.Films.Get(filmDTO.Id);
       if(film != null)
@@ -60,7 +60,7 @@ namespace FilmStore.BLL.Services
       }
     }
 
-    public async void SaveFilm(FilmDTO filmDTO)
+    public async Task SaveFilm(FilmDTO filmDTO)
     {
       Film film;
 
@@ -99,7 +99,7 @@ namespace FilmStore.BLL.Services
             GenreId = genreId
           });
         }
-        Database.Films.Create(film);
+        await Database.Films.Create(film);
       }
       else
       {
@@ -110,7 +110,6 @@ namespace FilmStore.BLL.Services
           film.Price = filmDTO.Price;
           film.Year = filmDTO.Year;
           film.Rate = filmDTO.Rate;
-          film.QuantityInStock = filmDTO.QuantityInStock;
           film.Producer = await Database.Producers.Get(filmDTO.ProducerId);
 
           film.Countries.Clear();
@@ -142,7 +141,7 @@ namespace FilmStore.BLL.Services
       await Database.SaveAsync();
     }
 
-    public async void SavePurchase(PurchaseDTO purchaseDTO)
+    public async Task SavePurchase(PurchaseDTO purchaseDTO)
     {
       Purchase purchase = await Database.Purchases.Get(purchaseDTO.Id);
       if(purchase != null)
@@ -163,7 +162,7 @@ namespace FilmStore.BLL.Services
       }
     }
 
-    public async void DeleteFilm(int id)
+    public async Task DeleteFilm(int id)
     {
       Database.Films.Delete(id);
       await Database.SaveAsync();

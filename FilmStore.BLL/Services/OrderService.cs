@@ -58,7 +58,7 @@ namespace FilmStore.BLL.Services
       context.Session.Set(key, films);
     }
 
-    public async void AddPurchase(HttpContext context, string key)
+    public async Task AddPurchase(HttpContext context, string key)
     {
       List<FilmPurchase> films = new List<FilmPurchase>();
       List<FilmDTO> filmDTOs = GetFilmsFromCart(context, key).ToList();
@@ -79,7 +79,7 @@ namespace FilmStore.BLL.Services
         });
       }
       purchase.Films = films;
-      Database.Purchases.Create(purchase);
+      await Database.Purchases.Create(purchase);
 
       await Database.SaveAsync();
       context.Session.Clear();

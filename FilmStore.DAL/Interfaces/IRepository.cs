@@ -9,7 +9,7 @@ namespace FilmStore.DAL.Interfaces
     IEnumerable<T> GetAll();
     Task<T> Get(int id);
     IEnumerable<T> Find(Func<T, bool> predicate);
-    void Create(T item);
+    Task Create(T item);
     void Update(T item);
     void Delete(int id);
   }

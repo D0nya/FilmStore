@@ -109,10 +109,10 @@ namespace FilmStore.WEB.Controllers
       }
     }
 
-    public IActionResult MakeOrder()
+    public async Task<IActionResult> MakeOrder()
     {
       TempData["message"] = $"Your order has been sent for review.";
-      _orderService.AddPurchase(HttpContext, "CartFilms");
+      await _orderService.AddPurchase(HttpContext, "CartFilms");
       return RedirectToAction("Cart");
     }
   }
