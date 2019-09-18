@@ -107,17 +107,25 @@ namespace FilmStore.WEB.Controllers
       return RedirectToAction("Admin");
     }
 
-    public IActionResult Purchases()
+    public IActionResult Purchases(string searchString, int page = 1)
     {
       var mapper = MapperService.CreateFilmDTOToFilmViewModelMapper();
-      var purchases = mapper.Map<IEnumerable<PurchaseDTO>, IEnumerable<PurchaseViewModel>>(_orderService.GetPurchases());
+      var purchases = mapper.Map<IEnumerable<PurchaseDTO>, IEnumerable<PurchaseViewModel>>(_orderService.GetPurchases(page, 7, searchString));
+      var count = _orderService.GetPurchases(searchString: searchString).Count();
       ViewBag.Status = new List<SelectListItem>
       {
         new SelectListItem("Pending", Status.Pending.ToString()),
         new SelectListItem("Confirmed", Status.Confirmed.ToString()),
         new SelectListItem("Rejected", Status.Rejected.ToString())
       };
-      return View(purchases);
+      var items = new TableViewModel<PurchaseViewModel>
+      {
+        PageViewModel = new Models.TableLogic.PageViewModel(count, page, 7),
+        Filter = new Models.TableLogic.SearchViewModel(),
+        Items = purchases
+      };
+      items.Filter.SearchString = searchString;
+      return View(items);
     }
 
     [HttpPost]

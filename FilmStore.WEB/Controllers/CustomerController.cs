@@ -5,6 +5,7 @@ using FilmStore.WEB.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace FilmStore.WEB.Controllers
 {
@@ -16,12 +17,17 @@ namespace FilmStore.WEB.Controllers
     {
       _orderService = orderService;
     }
-    public IActionResult History()
+    public IActionResult History(int page = 1)
     {
       var mapper = MapperService.CreateFilmDTOToFilmViewModelMapper();
-      var purchases = mapper.Map<IEnumerable<PurchaseDTO>, IEnumerable<PurchaseViewModel>>(_orderService.GetPurchases(HttpContext.User.Identity.Name));
-
-      return View(purchases);
+      var count = _orderService.GetPurchases(name: HttpContext.User.Identity.Name).Count();
+      var purchases = mapper.Map<IEnumerable<PurchaseDTO>, IEnumerable<PurchaseViewModel>>(_orderService.GetPurchases(page, 7, name: HttpContext.User.Identity.Name));
+      var table = new TableViewModel<PurchaseViewModel>
+      {
+        PageViewModel = new Models.TableLogic.PageViewModel(count, page, 7),
+        Items = purchases
+      };
+      return View(table);
     }
   }
 }

@@ -85,7 +85,7 @@ namespace FilmStore.BLL.Services
       context.Session.Clear();
     }
 
-    public IEnumerable<PurchaseDTO> GetPurchases(string name = null)
+    public IEnumerable<PurchaseDTO> GetPurchases(int page = 0, int pageSize = 0, string searchString = null, string name = null)
     {
 
       var mapper = MapperService.CreateFilmToFilmDTOMapper();
@@ -97,7 +97,17 @@ namespace FilmStore.BLL.Services
         int userId = Database.Customers.Find(c => c.Name == name).First().Id;
         purchases = purchases.Where(p => p.Customer.Id == userId);
       }
+      if (searchString != null)
+        purchases = purchases.Where(f => f.Customer.Name.ToUpper().Contains(searchString.ToUpper()));
+
       purchases = purchases.OrderByDescending(p => p.Date);
+
+      if (page != 0 && pageSize != 0)
+      {
+        var count = purchases.Count();
+        var items = purchases.Skip((page - 1) * pageSize).Take(pageSize);
+        return items;
+      }
       return purchases;
     }
     public void Dispose()
