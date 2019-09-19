@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace FilmStore.BLL.DTO
 {
@@ -11,7 +13,11 @@ namespace FilmStore.BLL.DTO
     public string LastName { get; set; }
     public DateTime BirthDay { get; set; }
     public string UserRef { get; set; }
+    [JsonIgnore]
+    [IgnoreDataMember]
     public UserDTO User { get; set; }
+    [JsonIgnore]
+    [IgnoreDataMember]
     public List<PurchaseDTO> Purchases { get; set; }
   }
 }

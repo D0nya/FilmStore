@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace FilmStore.BLL.Interfaces
@@ -20,7 +21,7 @@ namespace FilmStore.BLL.Interfaces
     Task AddPurchase(HttpContext context, string key);
 
     IEnumerable<PurchaseDTO> GetPurchases(int page = 0, int pageSize = 0, string searchString = null, string name = null);
-
+    MemoryStream GetPurchasesStream();
     int FilmsCount();
     void Dispose();
   }

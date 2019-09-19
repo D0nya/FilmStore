@@ -10,10 +10,12 @@
     <form method="get">
       <p>
         <label>User name: </label>
-        <input class="searchClass" type="text" placeholder="UserName" name="SearchString" value="@Model.Filter.SearchString"/>
+        <input class="searchClass" type="text" placeholder="UserName" name="SearchString" value="@Model.Filter.SearchString" />
         <br />
-        <input class="btn btn-secondary" type="submit" value="Filter" asp-action="Purchases" asp-controller="Admin" 
-               asp-route-page="@Model.PageViewModel.PageNumber" asp-route-searchString="@Model.Filter.SearchString"/>
+        <input class="btn btn-secondary" type="submit" value="Filter" asp-action="Purchases" asp-controller="Admin"
+               asp-route-page="@Model.PageViewModel.PageNumber" asp-route-searchString="@Model.Filter.SearchString" />
+        <a role="button" class="btn btn-primary" asp-action="DownloadPurchasesJson" asp-controller="Download" style="float:right">Save puchases to JSON</a>
+
       </p>
     </form>
   </div>

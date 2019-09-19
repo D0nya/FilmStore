@@ -4,9 +4,12 @@ using FilmStore.BLL.Interfaces;
 using FilmStore.DAL.Entities;
 using FilmStore.DAL.Interfaces;
 using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace FilmStore.BLL.Services
@@ -110,6 +113,19 @@ namespace FilmStore.BLL.Services
       }
       return purchases;
     }
+
+    public MemoryStream GetPurchasesStream()
+    {
+      var mapper = MapperService.CreateFilmToFilmDTOMapper();
+      IEnumerable<PurchaseDTO> purchases =
+        mapper.Map<IEnumerable<Purchase>, IEnumerable<PurchaseDTO>>(Database.Purchases.GetAll());
+
+      string purchasesJson = JsonConvert.SerializeObject(purchases);
+      byte[] bytes = Encoding.ASCII.GetBytes(purchasesJson);
+      MemoryStream stream = new MemoryStream(bytes);
+        return stream;
+    }
+
     public void Dispose()
     {
       Database.Dispose();
