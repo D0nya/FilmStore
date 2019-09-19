@@ -22,11 +22,11 @@ namespace FilmStore.BLL.Infrastructure
         .AddEntityFrameworkStores<FilmStoreContext>()
         .AddDefaultTokenProviders();
 
-      // Ошибка, если менять на AddSingleton
       Services.AddScoped<IUnitOfWork, EFUnitOfWork>();
       Services.AddScoped<IOrderService, OrderService>();
       Services.AddScoped<IUserService, UserService>();
       Services.AddScoped<IAdminService, AdminService>();
+      Services.AddScoped<INewsService, NewsService>();
       Provider = Services.BuildServiceProvider();
     }
   }

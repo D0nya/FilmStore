@@ -21,4 +21,9 @@
     <ProjectReference Include="..\FilmStore.BLL\FilmStore.BLL.csproj" />
   </ItemGroup>
 
+
+  <ItemGroup>
+    <Folder Include="wwwroot\Files\" />
+  </ItemGroup>
+
 </Project>

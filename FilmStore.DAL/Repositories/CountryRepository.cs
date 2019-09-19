@@ -20,7 +20,7 @@ namespace FilmStore.DAL.Repositories
     {
       await db.Countries.AddAsync(item);
     }
-    public async void Delete(int id)
+    public async Task Delete(int id)
     {
       Country country = await db.Countries.FindAsync(id);
       if (country != null)

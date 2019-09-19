@@ -14,6 +14,7 @@ namespace FilmStore.DAL.Interfaces
     IRepository<Producer> Producers { get; }
     IRepository<Purchase> Purchases { get; }
     IRepository<User> Users { get; }
+    IRepository<News> News { get; }
 
     IClientManager ClientManager { get; }
     UserManager<User> UserManager { get; }

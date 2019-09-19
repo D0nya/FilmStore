@@ -1,5 +1,5 @@
-﻿@model IEnumerable<FilmViewModel>
-@{ 
+﻿@model NewsViewModel
+@{
   ViewData["Title"] = "Store";
 }
 <!DOCTYPE html>
@@ -23,11 +23,37 @@
   <div class="news">
     @if (Context.User.IsInRole("admin"))
     {
-      //Add news
+      <h5>Add News</h5>
+      <form asp-action="NewsFeed" asp-controller="News" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+          <label asp-for="Header">Header</label>
+          <input class="form-control" asp-for="Header" style="width:40%" />
+        </div>
+        <div class="form-group">
+          <label asp-for="Body">Body</label>
+          <textarea class="form-control" asp-for="Body" rows="7" style="width:40%"></textarea>
+        </div>
+        <div class="form-group">
+          <input type="file" asp-for="Image" accept="image/*"/><br>
+        </div>
+        <div class="form-group">
+          <input class="btn btn-primary" type="submit" value="Save" />
+        </div>
+      </form>
+      <hr />
     }
-     <!--News-->
-    <h2>There should be some news.</h2>
+    <!--News-->
+    <div class="news-feed" id="news-feed"></div>
   </div>
 </body>
 
 </html>
+
+@section Scripts {
+  @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+<script type="text/javascript">
+  $(document).ready(function () {
+    LoadNews();
+  });
+</script>
+}

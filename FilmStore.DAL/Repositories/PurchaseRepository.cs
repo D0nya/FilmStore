@@ -19,7 +19,7 @@ namespace FilmStore.DAL.Repositories
     {
       await db.Purchases.AddAsync(item);
     }
-    public async void Delete(int id)
+    public async Task Delete(int id)
     {
       Purchase purchase = await db.Purchases.FindAsync(id);
       if (purchase != null)

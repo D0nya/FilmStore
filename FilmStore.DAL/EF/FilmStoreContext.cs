@@ -12,6 +12,7 @@ namespace FilmStore.DAL.EF
     public DbSet<Genre> Genres { get; set; }
     public DbSet<Customer> Customers { get; set; }
     public DbSet<Purchase> Purchases { get; set; }
+    public DbSet<News> News { get; set; }
 
     public FilmStoreContext(DbContextOptions options) : base(options) { }
 

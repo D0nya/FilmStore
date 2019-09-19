@@ -1,0 +1,28 @@
+﻿@model IEnumerable<NewsViewModel>
+
+<div>
+  @foreach (var news in Model)
+  {
+  <div class="news-header">
+    <p>
+      <h3>@news.Header</h3>
+      @if (Context.User.IsInRole("admin"))
+      {
+        <a role="button" class="btn btn-light" style="float:right"
+           asp-action="DeleteNews" asp-controller="News" asp-route-id="@news.Id">Delete</a>
+      }
+    </p>
+  </div>
+  <div class="news-body">
+    @if (news.ImagePath != null)
+    {
+      <img src="@news.ImagePath" width="300" style="height:auto; vertical-align:text-top; float:left; margin:7px 7px 7px 0;" />
+    }
+  <p style="display:block;">@news.Body</p> 
+  </div>
+  <div class="news-footer">
+    @news.Date
+    <hr />
+  </div>
+  }
+</div>

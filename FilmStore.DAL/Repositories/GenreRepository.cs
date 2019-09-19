@@ -19,7 +19,7 @@ namespace FilmStore.DAL.Repositories
     {
       await db.Genres.AddAsync(item);
     }
-    public async void Delete(int id)
+    public async Task Delete(int id)
     {
       Genre genre = await db.Genres.FindAsync(id);
       if (genre != null)

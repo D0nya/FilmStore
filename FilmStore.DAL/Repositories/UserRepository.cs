@@ -20,7 +20,7 @@ namespace FilmStore.DAL.Repositories
     {
       await db.Users.AddAsync(item);
     }
-    public async void Delete(int id)
+    public async Task Delete(int id)
     {
       User user = await db.Users.FindAsync(id);
       if (user != null)

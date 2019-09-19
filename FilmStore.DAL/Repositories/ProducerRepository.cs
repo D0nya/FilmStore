@@ -20,7 +20,7 @@ namespace FilmStore.DAL.Repositories
     {
       await db.Producers.AddAsync(item);
     }
-    public async void Delete(int id)
+    public async Task Delete(int id)
     {
       Producer producer = await db.Producers.FindAsync(id);
       if (producer != null)

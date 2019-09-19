@@ -164,7 +164,7 @@ namespace FilmStore.BLL.Services
 
     public async Task DeleteFilm(int id)
     {
-      Database.Films.Delete(id);
+      await Database.Films.Delete(id);
       await Database.SaveAsync();
     }
 

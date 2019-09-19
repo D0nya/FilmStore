@@ -11,6 +11,6 @@ namespace FilmStore.DAL.Interfaces
     IEnumerable<T> Find(Func<T, bool> predicate);
     Task Create(T item);
     void Update(T item);
-    void Delete(int id);
+    Task Delete(int id);
   }
 }

@@ -19,6 +19,7 @@ namespace FilmStore.DAL.Repositories
     private ProducerRepository producerRepository;
     private PurchaseRepository purchaseRepository;
     private UserRepository userRepository;
+    private NewsRepository newsRepository;
 
     private readonly IClientManager clientManager;
     private readonly UserManager<User> userManager;
@@ -95,6 +96,15 @@ namespace FilmStore.DAL.Repositories
         if (userRepository == null)
           userRepository = new UserRepository(db);
         return userRepository;
+      }
+    }
+    public IRepository<News> News
+    {
+      get
+      {
+        if (newsRepository == null)
+          newsRepository = new NewsRepository(db);
+        return newsRepository;
       }
     }
 

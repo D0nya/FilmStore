@@ -4,7 +4,6 @@
 // Write your JavaScript code.
 
 async function Filter(page, sort) {
-  console.log(sort);
   const [panelBody] = document.getElementsByClassName('panel-body');
   const [genreId, countryId, searchString, producerName, from, to] = document.getElementsByClassName('searchClass');
   const loader = '<div class="text-center"><div class="spinner-border text-secondary" role="status"><span class="sr-only">Loading...</span></div></div>';
@@ -18,6 +17,23 @@ async function Filter(page, sort) {
   if (response.ok) {
     res = await response.text();
     panelBody.innerHTML = res;
+  } else {
+    res = response.status;
+    console.log(res);
+  }
+}
+
+async function LoadNews() {
+  const [newsFeed] = document.getElementsByClassName('news-feed');
+  console.log(newsFeed);
+  const loader = '<div class="text-center"><div class="spinner-border text-secondary" role="status"><span class="sr-only">Loading...</span></div></div>';
+  newsFeed.innerHTML = loader;
+
+  const response = await fetch('/News/NewsFeed');
+  let res;
+  if (response.ok) {
+    res = await response.text();
+    newsFeed.innerHTML = res;
   } else {
     res = response.status;
     console.log(res);

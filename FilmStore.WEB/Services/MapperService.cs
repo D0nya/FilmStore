@@ -36,5 +36,14 @@ namespace FilmStore.WEB.Services
       }).CreateMapper();
       return mapper;
     }
+    public static IMapper NewsDTOTONewsViewModelMapper()
+    {
+      var mapper = new MapperConfiguration(cfg =>
+      {
+        cfg.CreateMap<NewsDTO, NewsViewModel>();
+        cfg.CreateMap<NewsViewModel, NewsDTO>();
+      }).CreateMapper();
+      return mapper;
+    }
   }
 }
