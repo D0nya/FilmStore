@@ -126,79 +126,89 @@ namespace FilmStore.BLL.Services
         return stream;
     }
 
-    public void Dispose()
-    {
-      Database.Dispose();
-    }
-
     public IEnumerable<FilmDTO> GetFilms(string searchString = null, string genre = null, 
-      string country = null, string producer = null, string yearFrom = null, string yearTo = null, 
-      int page = 1, int pageSize = 3, SortState sortOrder = SortState.NameAsc)
+      string country = null, string producer = null, string yearFrom = null, 
+      string yearTo = null, int page = 1, int pageSize = 3, 
+      SortState sortOrder = SortState.NameAsc, 
+      FilmStatus filmStatus = 0)
     {
       var mapper = MapperService.CreateFilmToFilmDTOMapper();
-      var films = mapper.Map<IEnumerable<Film>, IEnumerable<FilmDTO>>(Database.Films.GetAll());
+      IEnumerable<Film> films;
+      if (filmStatus == 0)
+        films = Database.Films.GetAll();
+      else
+        films = Database.Films.GetAll().Where(f => f.Status == filmStatus);
+
+      var filmsDTO = mapper.Map<IEnumerable<Film>, IEnumerable<FilmDTO>>(films);
 
       if (searchString != null)
-        films = films.Where(f => f.Name.ToUpper().Contains(searchString.ToUpper()));
+        filmsDTO = filmsDTO.Where(f => f.Name.ToUpper().Contains(searchString.ToUpper()));
       if (genre != null)
-        films = films.Where(f => f.Genres.Any(g => g.Id.ToString() == genre));
+        filmsDTO = filmsDTO.Where(f => f.Genres.Any(g => g.Id.ToString() == genre));
       if (country != null)
-        films = films.Where(f => f.Countries.Any(c => c.Id.ToString() == country));
+        filmsDTO = filmsDTO.Where(f => f.Countries.Any(c => c.Id.ToString() == country));
       if (producer != null)
-        films = films.Where(f => f.Producer.Name.ToUpper().Contains(producer.ToUpper()));
+        filmsDTO = filmsDTO.Where(f => f.Producer.Name.ToUpper().Contains(producer.ToUpper()));
       if (yearFrom != null)
-        films = films.Where(f => int.Parse(f.Year) >= int.Parse(yearFrom));
+        filmsDTO = filmsDTO.Where(f => int.Parse(f.Year) >= int.Parse(yearFrom));
       if (yearTo != null)
-        films = films.Where(f => int.Parse(f.Year) <= int.Parse(yearTo));
+        filmsDTO = filmsDTO.Where(f => int.Parse(f.Year) <= int.Parse(yearTo));
 
       switch(sortOrder)
       {
         case SortState.NameAsc:
-          films = films.OrderBy(f => f.Name);
+          filmsDTO = filmsDTO.OrderBy(f => f.Name);
           break;
         case SortState.NameDesc:
-          films = films.OrderByDescending(f => f.Name);
+          filmsDTO = filmsDTO.OrderByDescending(f => f.Name);
           break;
         case SortState.PriceAsc:
-          films = films.OrderBy(f => f.Price);
+          filmsDTO = filmsDTO.OrderBy(f => f.Price);
           break;
         case SortState.PriceDesc:
-          films = films.OrderByDescending(f => f.Price);
+          filmsDTO = filmsDTO.OrderByDescending(f => f.Price);
           break;
         case SortState.ProducerAsc:
-          films = films.OrderBy(f => f.Producer.Name);
+          filmsDTO = filmsDTO.OrderBy(f => f.Producer.Name);
           break;
         case SortState.ProducerDesc:
-          films = films.OrderByDescending(f => f.Producer.Name);
+          filmsDTO = filmsDTO.OrderByDescending(f => f.Producer.Name);
           break;
         case SortState.QuantityAsc:
-          films = films.OrderBy(f => f.QuantityInStock);
+          filmsDTO = filmsDTO.OrderBy(f => f.QuantityInStock);
           break;
         case SortState.QuantityDesc:
-          films = films.OrderByDescending(f => f.QuantityInStock);
+          filmsDTO = filmsDTO.OrderByDescending(f => f.QuantityInStock);
           break;
         case SortState.YearAsc:
-          films = films.OrderBy(f => f.Year);
+          filmsDTO = filmsDTO.OrderBy(f => f.Year);
           break;
         case SortState.YearDesc:
-          films = films.OrderByDescending(f => f.Year);
+          filmsDTO = filmsDTO.OrderByDescending(f => f.Year);
           break;
         case SortState.RateAsc:
-          films = films.OrderBy(f => f.Rate);
+          filmsDTO = filmsDTO.OrderBy(f => f.Rate);
           break;
         case SortState.RateDesc:
-          films = films.OrderByDescending(f => f.Rate);
+          filmsDTO = filmsDTO.OrderByDescending(f => f.Rate);
           break;
       }
-      var count = films.Count();
-      var items = films.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+      if (page != 0)
+      {
+        var count = filmsDTO.Count();
+        filmsDTO = filmsDTO.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+      }
 
-      return items;
+      return filmsDTO;
     }
 
     public int FilmsCount()
     {
      return  Database.Films.GetAll().Count();
+    }
+    public void Dispose()
+    {
+      Database.Dispose();
     }
   }
 }

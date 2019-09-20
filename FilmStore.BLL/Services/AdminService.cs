@@ -73,6 +73,8 @@ namespace FilmStore.BLL.Services
           Price = filmDTO.Price,
           Rate = filmDTO.Rate,
           Year = filmDTO.Year,
+          ImagePath = filmDTO.ImagePath,
+          Status = filmDTO.Status,
           Purchases = new List<FilmPurchase>(),
           Countries = new List<FilmCountry>(),
           Genres = new List<FilmGenre>()
@@ -110,30 +112,39 @@ namespace FilmStore.BLL.Services
           film.Price = filmDTO.Price;
           film.Year = filmDTO.Year;
           film.Rate = filmDTO.Rate;
+          film.Status = filmDTO.Status;
           film.Producer = await Database.Producers.Get(filmDTO.ProducerId);
+          if (filmDTO.ImagePath != null)
+            film.ImagePath = filmDTO.ImagePath;
 
-          film.Countries.Clear();
-          foreach (int countryId in filmDTO.CountriesId)
+          if (filmDTO.CountriesId.Count != 0)
           {
-            film.Countries.Add(new FilmCountry
+            film.Countries.Clear();
+            foreach (int countryId in filmDTO.CountriesId)
             {
-              Film = film,
-              FilmId = film.Id,
-              Country = await Database.Countries.Get(countryId),
-              CountryId = countryId
-            });
+              film.Countries.Add(new FilmCountry
+              {
+                Film = film,
+                FilmId = film.Id,
+                Country = await Database.Countries.Get(countryId),
+                CountryId = countryId
+              });
+            }
           }
 
-          film.Genres.Clear();
-          foreach (int genreId in filmDTO.GenresId)
+          if (filmDTO.GenresId.Count != 0)
           {
-            film.Genres.Add(new FilmGenre
+            film.Genres.Clear();
+            foreach (int genreId in filmDTO.GenresId)
             {
-              Film = film,
-              FilmId = film.Id,
-              Genre = await Database.Genres.Get(genreId),
-              GenreId = genreId
-            });
+              film.Genres.Add(new FilmGenre
+              {
+                Film = film,
+                FilmId = film.Id,
+                Genre = await Database.Genres.Get(genreId),
+                GenreId = genreId
+              });
+            }
           }
         }
         Database.Films.Update(film);

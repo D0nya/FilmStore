@@ -1,5 +1,6 @@
 ﻿using FilmStore.BLL.DTO;
 using FilmStore.BLL.Interfaces;
+using FilmStore.DAL.Entities;
 using FilmStore.WEB.Models;
 using FilmStore.WEB.Models.TableLogic;
 using FilmStore.WEB.Services;
@@ -86,9 +87,14 @@ namespace FilmStore.WEB.Controllers
       string yearFrom, string yearTo, string returnUrl, int page = 1, SortState sortOrder = SortState.NameAsc)
     {
       int pageSize = 5;
+      FilmStatus status;
+      if (returnUrl == "/Admin/Admin")
+        status = 0;
+      else
+        status = FilmStatus.CameOut;
 
       var mapper = MapperService.CreateFilmDTOToFilmViewModelMapper();
-      var filmDTOs = _orderService.GetFilms(searchString, genre, country, producer,yearFrom,yearTo, page,pageSize,sortOrder);
+      var filmDTOs = _orderService.GetFilms(searchString, genre, country, producer,yearFrom,yearTo, page,pageSize,sortOrder, status);
       var filmViewModels = mapper.Map<IEnumerable<FilmDTO>, IEnumerable<FilmViewModel>>(filmDTOs);
 
       TableViewModel<FilmViewModel> res = new TableViewModel<FilmViewModel>

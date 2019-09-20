@@ -11,6 +11,7 @@
 
   <div class="panel-heading">
     <h3>Films <a asp-action="Purchases" asp-controller="Admin">Purchases</a></h3>
+    <a asp-action="AddFilm" class="btn btn-secondary" style="float:right">Add film</a>
     <p>
       Genre:
       <select class="custom-select searchClass" style="width:auto" name="GenreId" asp-items="@ViewBag.Genres">
@@ -35,10 +36,6 @@
   </div>
 
   <div class="panel-body"></div>
-  
-  <div class="panel-footer">
-    <a asp-action="AddFilm" class="btn btn-secondary">Add film</a>
-  </div>
 </div>
 
 @section Scripts {

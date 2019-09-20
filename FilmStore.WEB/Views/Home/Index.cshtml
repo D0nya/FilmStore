@@ -9,42 +9,67 @@
 </head>
 
 <body>
-  <h1>Welcome</h1>
-  <p>Enjoy your favourite movies with the best quality.</p><hr />
-  <div class="header">
-    <h2>Hello!</h2>
-    <p>Welcome to my film store. Here you can buy the best films according to your preferences.</p>
-    <p>
-      Store contains many films of various genres from different producers all over the world.
-      From old noirs to fresh comedies. We guarantee that you find what you like.
-    </p>
-    <hr />
-  </div>
-  <div class="news">
-    @if (Context.User.IsInRole("admin"))
-    {
-      <h5>Add News</h5>
-      <form asp-action="NewsFeed" asp-controller="News" method="post" enctype="multipart/form-data">
-        <div class="form-group">
-          <label asp-for="Header">Header</label>
-          <input class="form-control" asp-for="Header" style="width:40%" />
-        </div>
-        <div class="form-group">
-          <label asp-for="Body">Body</label>
-          <textarea class="form-control" asp-for="Body" rows="7" style="width:40%"></textarea>
-        </div>
-        <div class="form-group">
-          <input type="file" asp-for="Image" accept="image/*"/><br>
-        </div>
-        <div class="form-group">
-          <input class="btn btn-primary" type="submit" value="Save" />
-        </div>
-      </form>
-      <hr />
-    }
-    <!--News-->
-    <div class="news-feed" id="news-feed"></div>
-  </div>
+  <table style="width:1000px;table-layout:fixed">
+    <tbody>
+      <tr>
+        <td width="75%">
+          <h2>Fresh news</h2>
+          <div class="news">
+            @if (Context.User.IsInRole("admin"))
+            {
+              <h5>Add News</h5>
+              <form asp-action="NewsFeed" asp-controller="News" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                  <label asp-for="Header">Header</label>
+                  <input class="form-control" asp-for="Header" style="width:70%" />
+                </div>
+                <div class="form-group">
+                  <label asp-for="Body">Body</label>
+                  <textarea class="form-control" asp-for="Body" rows="7" style="width:70%"></textarea>
+                </div>
+                <div class="form-group">
+                  <input type="file" asp-for="Image" accept="image/*" /><br/>
+                </div>
+                <div class="form-group">
+                  <input class="btn btn-primary" type="submit" value="Save" />
+                </div>
+              </form>
+              <hr />
+            }
+            <!--News-->
+            <div class="news-feed" id="news-feed"></div>
+          </div>
+        </td>
+        <td height="100%" width="15%" valign="top">
+          <div class="sidebar">
+            <div class="block block-latest" style="height:250px;width:250px;background-color:white">
+              <h5 style="text-align:center;background-color:whitesmoke">Latest</h5>
+              <div class="block-body">
+                @foreach (var film in ViewBag.Latest)
+                {
+                <div class="latest-item" style="margin:8px 8px">
+                  <i style="text-align:left">@film.Name</i>
+                  <u style="float:right">@film.Rate</u>
+                </div>
+                }
+              </div>
+            </div>
+            <div class="block block_soon" style="height:250px;width:250px;background-color:white">
+              <h5 style="text-align:center;background-color:whitesmoke">Coming soon</h5>
+              <div class="block-body">
+                @foreach (var film in ViewBag.ComingSoon)
+                {
+                  <div class="latest-item" style="margin:8px 8px">
+                    <i style="text-align:left">@film.Name</i>
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </body>
 
 </html>

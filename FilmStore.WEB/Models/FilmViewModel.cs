@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using FilmStore.DAL.Entities;
+using Microsoft.AspNetCore.Http;
 
 namespace FilmStore.WEB.Models
 {
@@ -17,6 +19,9 @@ namespace FilmStore.WEB.Models
     [Display(Name = "Price")]
     public decimal Price { get; set; }
     public float Rate { get; set; }
+
+    public string ImagePath { get; set; }
+    public FilmStatus Status { get; set; }
 
     [HiddenInput(DisplayValue = false)]
     public int ProducerId { get; set; }
@@ -35,5 +40,7 @@ namespace FilmStore.WEB.Models
 
     [HiddenInput(DisplayValue = false)]
     public List<PurchaseViewModel> Purchases { get; set; }
+
+    public IFormFile Image { get; set; }
   }
 }

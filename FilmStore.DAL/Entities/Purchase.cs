@@ -4,12 +4,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FilmStore.DAL.Entities
 {
-  public enum Status
-    {
-      Pending,
-      Confirmed,
-      Rejected
-    }
   public class Purchase
   {
 

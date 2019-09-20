@@ -9,20 +9,31 @@
           <h4>@film.Name</h4>
         </div>
         <div class="info">
-          <p>Producer: @film.Producer.Name</p>
-          <p>
-            Genres: @foreach (var genre in film.Genres)
-            {
-            <label>@genre.Name </label>
-            }
-          </p>
-          <p>
-            Countires: @foreach (var country in film.Countries)
-            {
-            <label>@country.Name </label>
-            }
-          </p>
-          <p>Year: @film.Year</p>
+          <table>
+            <tbody>
+              <tr>
+                <td>
+                  <img src="@film.ImagePath" style="width:auto;height:200px;"/>
+                </td>
+                <td>
+                  <p>Producer: @film.Producer.Name</p>
+                  <p>
+                    Genres: @foreach (var genre in film.Genres)
+                    {
+                      <label>@genre.Name </label>
+                    }
+                  </p>
+                  <p>
+                    Countires: @foreach (var country in film.Countries)
+                    {
+                      <label>@country.Name </label>
+                    }
+                  </p>
+                  <p>Year: @film.Year</p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
         <div class="card-footer">
           <label style="float:left; width:50%">IMDb: @film.Rate</label>

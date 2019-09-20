@@ -1,6 +1,5 @@
 ﻿using FilmStore.DAL.Entities;
 using System;
-using System.Collections.Generic;
 
 namespace FilmStore.WEB.Models
 {

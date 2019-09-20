@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using FilmStore.DAL.Entities;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
@@ -12,7 +13,10 @@ namespace FilmStore.BLL.DTO
     public decimal Price { get; set; }
     public float Rate { get; set; }
     public int QuantityInStock { get; set; }
-
+    [JsonIgnore]
+    [IgnoreDataMember]
+    public string ImagePath { get; set; }
+    public FilmStatus Status { get; set; }
     public int ProducerId { get; set; }
     public ProducerDTO Producer { get; set; }
 

@@ -12,6 +12,8 @@ namespace FilmStore.DAL.Entities
     public string Year { get; set; }
     public decimal Price { get; set; }
     public float Rate { get; set; }
+    public string ImagePath { get; set; }
+    public FilmStatus Status{ get; set; }
     public virtual Producer Producer { get; set; }
     public virtual List<FilmCountry> Countries { get; set; }
     public virtual List<FilmGenre> Genres { get; set; }

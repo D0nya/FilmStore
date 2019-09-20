@@ -13,15 +13,15 @@
       }
     </p>
   </div>
-  <div class="news-body">
+  <div class="news-body" style="width:95%">
     @if (news.ImagePath != null)
     {
-      <img src="@news.ImagePath" width="300" style="height:auto; vertical-align:text-top; float:left; margin:7px 7px 7px 0;" />
+      <img src="@news.ImagePath" width="200" style="height:auto; vertical-align:text-top; float:left; margin: 0 10px 0 0;" />
     }
-  <p style="display:block;">@news.Body</p> 
+  <p style="display:block;white-space:pre-wrap">@news.Body</p> 
   </div>
   <div class="news-footer">
-    @news.Date
+    <p>@news.Date</p>
     <hr />
   </div>
   }

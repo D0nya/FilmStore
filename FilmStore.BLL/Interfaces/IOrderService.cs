@@ -1,4 +1,5 @@
 ﻿using FilmStore.BLL.DTO;
+using FilmStore.DAL.Entities;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -12,13 +13,14 @@ namespace FilmStore.BLL.Interfaces
     Task<FilmDTO> GetFilm(int id);
     IEnumerable<FilmDTO> GetFilms(string searchString = null, string genre=null, string country=null, 
       string producer = null, string yearFrom = null, string yearTo = null, int page = 1, int pageSize = 3,
-      SortState sortOrder = SortState.NameAsc);
+      SortState sortOrder = SortState.NameAsc, FilmStatus filmStatus = 0);
 
     IEnumerable<FilmDTO> GetFilmsFromCart(HttpContext context, string key);
     void AddFilmsToCart(HttpContext context, string key, IEnumerable<FilmDTO> films);
     void RemoveFromCart(HttpContext context, string key, bool first, Predicate<FilmDTO> predicate);
 
     Task AddPurchase(HttpContext context, string key);
+
 
     IEnumerable<PurchaseDTO> GetPurchases(int page = 0, int pageSize = 0, string searchString = null, string name = null);
     MemoryStream GetPurchasesStream();

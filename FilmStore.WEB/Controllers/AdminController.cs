@@ -4,10 +4,12 @@ using FilmStore.DAL.Entities;
 using FilmStore.WEB.Models;
 using FilmStore.WEB.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -19,14 +21,20 @@ namespace FilmStore.WEB.Controllers
     private readonly IOrderService _orderService;
     private readonly IAdminService _adminService;
     private readonly IEmailSender _emailSender;
+    private readonly IHostingEnvironment _appEnvironment;
     private readonly IEnumerable<SelectListItem> genres;
     private readonly IEnumerable<SelectListItem> producers;
     private readonly IEnumerable<SelectListItem> countries;
-    public AdminController(IOrderService orderService, IAdminService adminService, IEmailSender emailSender)
+    public AdminController(
+      IOrderService orderService, 
+      IAdminService adminService, 
+      IEmailSender emailSender, 
+      IHostingEnvironment hostingEnvironment)
     {
       _orderService = orderService;
       _adminService = adminService;
       _emailSender = emailSender;
+      _appEnvironment = hostingEnvironment;
 
       genres = _adminService.GetGenres().Select(g => new SelectListItem(g.Name, g.Id.ToString()));
       producers = _adminService.GetProducers().Select(p => new SelectListItem(p.Name, p.Id.ToString()));
@@ -46,8 +54,13 @@ namespace FilmStore.WEB.Controllers
       var filmViewModel = mapper.Map<FilmDTO, FilmViewModel>(film);
 
       ViewBag.Genres = genres;
-      ViewBag.Producers = producers;
       ViewBag.Countries = countries;
+      ViewBag.Producers = producers;
+      ViewBag.FilmStatus = new List<SelectListItem>
+      {
+        new SelectListItem("Coming Soon", FilmStatus.ComingSoon.ToString()),
+        new SelectListItem("Came out", FilmStatus.CameOut.ToString())
+      };
       return View(filmViewModel);
     }
 
@@ -58,6 +71,15 @@ namespace FilmStore.WEB.Controllers
       if (ModelState.IsValid)
       {
         var filmDTO = mapper.Map<FilmViewModel, FilmDTO>(filmViewModel);
+        if (filmViewModel.Image != null)
+        {
+          string path = "/Files/Posters/" + filmViewModel.Image.FileName;
+          using (FileStream fs = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
+          {
+            await filmViewModel.Image.CopyToAsync(fs);
+          }
+          filmDTO.ImagePath = path;
+        }
         await _adminService.SaveFilm(filmDTO);
         TempData["message"] = $"Changes in film {filmViewModel.Name} were saved successfully.";
         return RedirectToAction("Admin");
@@ -81,6 +103,11 @@ namespace FilmStore.WEB.Controllers
       ViewBag.Genres = genres;
       ViewBag.Producers = producers;
       ViewBag.Countries = countries;
+      ViewBag.FilmStatus = new List<SelectListItem>
+      {
+        new SelectListItem("Coming Soon", FilmStatus.ComingSoon.ToString()),
+        new SelectListItem("Came out", FilmStatus.CameOut.ToString())
+      };
       return View();
     }
 
@@ -91,6 +118,17 @@ namespace FilmStore.WEB.Controllers
       {
         var mapper = MapperService.CreateFilmViewModelToFilmDTOMapper();
         var filmDTO = mapper.Map<FilmViewModel, FilmDTO>(filmViewModel);
+        if(filmViewModel.Image != null)
+        {
+          string path = "/Files/Posters/" + filmViewModel.Image.FileName;
+          using (FileStream fs = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
+          {
+            await filmViewModel.Image.CopyToAsync(fs);
+          }
+          filmDTO.ImagePath = path;
+        } else {
+          filmDTO.ImagePath = "/Files/Posters/NoImage.png";
+        }
         await _adminService.SaveFilm(filmDTO);
         TempData["message"] = $"Film {filmViewModel.Name} was added successfully.";
         return RedirectToAction("Admin");
