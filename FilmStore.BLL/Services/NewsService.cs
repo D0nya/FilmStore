@@ -17,7 +17,16 @@ namespace FilmStore.BLL.Services
       Database = db;
     }
 
-    public async Task AddNews(NewsDTO newsDTO)
+    public IEnumerable<NewsDTO> GetNews()
+    {
+      var mapper = MapperService.NewsToNewsDTOMapper();
+      var news = Database.News.GetAll();
+      var newsDTO = mapper.Map<IEnumerable<News>, IEnumerable<NewsDTO>>(news);
+
+      newsDTO = newsDTO.OrderByDescending(n => n.Date);
+      return newsDTO;
+    }
+    public async Task AddNewsAsync(NewsDTO newsDTO)
     {
       News news = await Database.News.Get(newsDTO.Id);
       if(news == null)
@@ -33,18 +42,7 @@ namespace FilmStore.BLL.Services
         await Database.SaveAsync();
       }
     }
-
-    public IEnumerable<NewsDTO> GetNews()
-    {
-      var mapper = MapperService.NewsToNewsDTOMapper();
-      var news = Database.News.GetAll();
-      var newsDTO = mapper.Map<IEnumerable<News>, IEnumerable<NewsDTO>>(news);
-
-      newsDTO = newsDTO.OrderByDescending(n => n.Date);
-      return newsDTO;
-    }
-
-    public async Task DeleteNews(int id)
+    public async Task DeleteNewsAsync(int id)
     {
       await Database.News.Delete(id);
       await Database.SaveAsync();

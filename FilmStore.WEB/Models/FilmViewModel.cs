@@ -18,29 +18,26 @@ namespace FilmStore.WEB.Models
     public string Year { get; set; }
     [Display(Name = "Price")]
     public decimal Price { get; set; }
+    [Display(Name = "Rate")]
     public float Rate { get; set; }
-
     public string ImagePath { get; set; }
+    [Display(Name = "Film status")]
     public FilmStatus Status { get; set; }
 
     [HiddenInput(DisplayValue = false)]
     public int ProducerId { get; set; }
-
     public ProducerViewModel Producer { get; set; }
 
     [HiddenInput(DisplayValue = false)]
     public List<int> CountriesId { get; set; }
-
     public List<CountryViewModel> Countries { get; set; }
 
     [HiddenInput(DisplayValue = false)]
     public List<int> GenresId { get; set; }
-
     public List<GenreViewModel> Genres { get; set; }
 
     [HiddenInput(DisplayValue = false)]
     public List<PurchaseViewModel> Purchases { get; set; }
-
     public IFormFile Image { get; set; }
   }
 }

@@ -13,18 +13,18 @@ namespace FilmStore.BLL.DTO
     public decimal Price { get; set; }
     public float Rate { get; set; }
     public int QuantityInStock { get; set; }
-    [JsonIgnore]
-    [IgnoreDataMember]
-    public string ImagePath { get; set; }
     public FilmStatus Status { get; set; }
     public int ProducerId { get; set; }
     public ProducerDTO Producer { get; set; }
 
+    [JsonIgnore]
+    [IgnoreDataMember]
     public List<int> CountriesId { get; set; }
     [JsonIgnore]
     [IgnoreDataMember]
     public List<CountryDTO> Countries { get; set; }
-
+    [JsonIgnore]
+    [IgnoreDataMember]
     public List<int> GenresId { get; set; }
     [JsonIgnore]
     [IgnoreDataMember]
@@ -32,5 +32,8 @@ namespace FilmStore.BLL.DTO
     [JsonIgnore]
     [IgnoreDataMember]
     public List<PurchaseDTO> Purchases { get; set; }
+    [JsonIgnore]
+    [IgnoreDataMember]
+    public string ImagePath { get; set; }
   }
 }

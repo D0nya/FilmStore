@@ -1,5 +1,4 @@
 ﻿using FilmStore.BLL.Interfaces;
-using FilmStore.WEB.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FilmStore.WEB.Controllers

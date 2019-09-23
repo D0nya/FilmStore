@@ -7,7 +7,7 @@ namespace FilmStore.BLL.Interfaces
   public interface INewsService
   {
     IEnumerable<NewsDTO> GetNews();
-    Task AddNews(NewsDTO newsDTO);
-    Task DeleteNews(int id);
+    Task AddNewsAsync(NewsDTO newsDTO);
+    Task DeleteNewsAsync(int id);
   }
 }

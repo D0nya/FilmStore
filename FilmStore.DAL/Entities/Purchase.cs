@@ -6,7 +6,6 @@ namespace FilmStore.DAL.Entities
 {
   public class Purchase
   {
-
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
     public Status Status { get; set; }

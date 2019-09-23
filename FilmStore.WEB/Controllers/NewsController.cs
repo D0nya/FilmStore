@@ -3,7 +3,6 @@ using FilmStore.BLL.Interfaces;
 using FilmStore.WEB.Models;
 using FilmStore.WEB.Services;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.IO;
@@ -43,13 +42,13 @@ namespace FilmStore.WEB.Controllers
         }
         newsDTO.ImagePath = path;
       }
-      await _newsService.AddNews(newsDTO);
+      await _newsService.AddNewsAsync(newsDTO);
       return Redirect("~/Home/Index");
     }
 
     public async Task<IActionResult> DeleteNews(int id)
     {
-      await _newsService.DeleteNews(id);
+      await _newsService.DeleteNewsAsync(id);
       return Redirect("~/Home/Index");
     }
   }

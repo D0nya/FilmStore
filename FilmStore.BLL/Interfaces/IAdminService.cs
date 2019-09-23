@@ -10,11 +10,9 @@ namespace FilmStore.BLL.Interfaces
     IEnumerable<CountryDTO> GetCountries();
     IEnumerable<ProducerDTO> GetProducers();
 
-    Task<FilmDTO> GetFilm(int id);
-
-    Task SaveFilm(FilmDTO filmDTO);
-    Task SavePurchase(PurchaseDTO purchaseDTO);
-    Task ChangeQuantityInStock(FilmDTO filmDTO);
-    Task DeleteFilm(int id);
+    Task SaveFilmAsync(FilmDTO filmDTO);
+    Task SavePurchaseAsync(PurchaseDTO purchaseDTO);
+    Task ChangeQuantityInStockAsync(FilmDTO filmDTO);
+    Task DeleteFilmAsync(int id);
   }
 }

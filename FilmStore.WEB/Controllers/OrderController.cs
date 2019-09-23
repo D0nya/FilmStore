@@ -36,6 +36,7 @@ namespace FilmStore.WEB.Controllers
       IEnumerable<FilmDTO> films = _orderService.GetFilmsFromCart(HttpContext, "CartFilms");
       if (films == null)
         return View(null);
+
       IEnumerable<FilmDTO> filmsDistinct = films.GroupBy(film => film.Id).Select(group => group.FirstOrDefault());
       var mapper = MapperService.CreateFilmDTOToFilmViewModelMapper();
 
@@ -53,7 +54,7 @@ namespace FilmStore.WEB.Controllers
 
     public async Task<IActionResult> AddToCart(int id, [FromQuery]int count, [FromQuery]string returnUrl)
     {
-      FilmDTO film = await _orderService.GetFilm(id);
+      FilmDTO film = await _orderService.GetFilmAsync(id);
       List<FilmDTO> films = new List<FilmDTO>();
 
       if (returnUrl == null)
@@ -118,7 +119,7 @@ namespace FilmStore.WEB.Controllers
     public async Task<IActionResult> MakeOrder()
     {
       TempData["message"] = $"Your order has been sent for review.";
-      await _orderService.AddPurchase(HttpContext, "CartFilms");
+      await _orderService.AddPurchaseAsync(HttpContext, "CartFilms");
       return RedirectToAction("Cart");
     }
   }

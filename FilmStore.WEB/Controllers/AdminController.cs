@@ -48,7 +48,7 @@ namespace FilmStore.WEB.Controllers
     }
     public async Task<ViewResult> Edit(int Id)
     {
-      var film = await _orderService.GetFilm(Id);
+      var film = await _orderService.GetFilmAsync(Id);
       var mapper = MapperService.CreateFilmDTOToFilmViewModelMapper();
 
       var filmViewModel = mapper.Map<FilmDTO, FilmViewModel>(film);
@@ -80,7 +80,7 @@ namespace FilmStore.WEB.Controllers
           }
           filmDTO.ImagePath = path;
         }
-        await _adminService.SaveFilm(filmDTO);
+        await _adminService.SaveFilmAsync(filmDTO);
         TempData["message"] = $"Changes in film {filmViewModel.Name} were saved successfully.";
         return RedirectToAction("Admin");
       }
@@ -93,7 +93,7 @@ namespace FilmStore.WEB.Controllers
     {
       var mapper = MapperService.CreateFilmViewModelToFilmDTOMapper();
       var filmDTO = mapper.Map<FilmViewModel, FilmDTO>(film);
-      await _adminService.ChangeQuantityInStock(filmDTO);
+      await _adminService.ChangeQuantityInStockAsync(filmDTO);
       TempData["message"] = $"{film.Name} quantity set to {film.QuantityInStock}.";
       return RedirectToAction("Admin");
     }
@@ -129,7 +129,7 @@ namespace FilmStore.WEB.Controllers
         } else {
           filmDTO.ImagePath = "/Files/Posters/NoImage.png";
         }
-        await _adminService.SaveFilm(filmDTO);
+        await _adminService.SaveFilmAsync(filmDTO);
         TempData["message"] = $"Film {filmViewModel.Name} was added successfully.";
         return RedirectToAction("Admin");
       }
@@ -139,8 +139,8 @@ namespace FilmStore.WEB.Controllers
 
     public async Task<IActionResult> DeleteFilm(int id)
     {
-      string filmName = (await _adminService.GetFilm(id)).Name;
-      await _adminService.DeleteFilm(id);
+      string filmName = (await _orderService.GetFilmAsync(id)).Name;
+      await _adminService.DeleteFilmAsync(id);
       TempData["message"] = $"Film {filmName} was deleted successfully.";
       return RedirectToAction("Admin");
     }
@@ -172,7 +172,7 @@ namespace FilmStore.WEB.Controllers
       var mapper = MapperService.CreateFilmViewModelToFilmDTOMapper();
       PurchaseDTO purchaseDTO = mapper.Map<PurchaseViewModel, PurchaseDTO>(purchase);
 
-      await _adminService.SavePurchase(purchaseDTO);
+      await _adminService.SavePurchaseAsync(purchaseDTO);
       TempData["message"] = $"Purchase #{purchase.Id}. Status: {purchase.Status}.";
 
       if(purchase.Status != Status.Pending)

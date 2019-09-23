@@ -59,7 +59,6 @@ namespace FilmStore.BLL.Services
       }).CreateMapper();
       return mapper;
     }
-
     public static IMapper NewsToNewsDTOMapper()
     {
       var mapper = new MapperConfiguration(cfg =>

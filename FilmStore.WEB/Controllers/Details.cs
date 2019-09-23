@@ -16,7 +16,7 @@ namespace FilmStore.WEB.Controllers
     }
     public async Task<ViewResult> FilmDetails(int id)
     {
-      var film = await _orderService.GetFilm(id);
+      var film = await _orderService.GetFilmAsync(id);
       var mapper = MapperService.CreateFilmDTOToFilmViewModelMapper();
       var viewFilm = mapper.Map<FilmDTO, FilmViewModel>(film);
       return View(viewFilm);

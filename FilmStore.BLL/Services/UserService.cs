@@ -12,14 +12,13 @@ namespace FilmStore.BLL.Services
 {
   public class UserService : IUserService
   {
-
     IUnitOfWork Database { get; set; }
     public UserService(IUnitOfWork uow)
     {
       Database = uow;
     }
 
-    public async Task<OperationDetails> Create(UserDTO userDto)
+    public async Task<OperationDetails> CreateAsync(UserDTO userDto)
     {
       User user = await Database.UserManager.FindByEmailAsync(userDto.Email);
       if (user == null)
@@ -42,7 +41,7 @@ namespace FilmStore.BLL.Services
         return new OperationDetails(false, "User with this login already exists", "Email");
       }
     }
-    public async Task<string> CreateEmailToken(UserDTO userDTO)
+    public async Task<string> CreateEmailTokenAsync(UserDTO userDTO)
     {
       User user = await Database.UserManager.FindByEmailAsync(userDTO.Email);
       if(user != null)
@@ -53,7 +52,6 @@ namespace FilmStore.BLL.Services
         throw new ArgumentNullException("user");
       }
     }
-
     public async Task<string> GetUserIdAsync(UserDTO userDTO)
     {
       User user = await Database.UserManager.FindByEmailAsync(userDTO.Email);
@@ -61,7 +59,6 @@ namespace FilmStore.BLL.Services
         return null;
       return user.Id;
     }
-
     public async Task<OperationDetails> EditUserAsync(UserDTO userDTO)
     {
       User user = await Database.UserManager.FindByNameAsync(userDTO.Name);
@@ -78,11 +75,8 @@ namespace FilmStore.BLL.Services
         return new OperationDetails(true, "Success!", "");
       }
       else
-      {
         return new OperationDetails(false, "User not found.", "UserName");
-      }
     }
-
     public async Task<UserDTO> GetUserByNameAsync(string userName)
     {
       var user = await Database.UserManager.FindByNameAsync(userName);

@@ -71,13 +71,13 @@ namespace FilmStore.WEB.Areas.Identity.Pages.Account
           Customer = new CustomerDTO() { Name = Input.UserName},
           Password = Input.Password, Role = "user", Name = Input.UserName};
 
-        var result = await _userService.Create(user);
+        var result = await _userService.CreateAsync(user);
         if (result.Succeeded)
         {
           _logger.LogInformation("User created a new account with password.");
 
           user.Id = await _userService.GetUserIdAsync(user);
-          var code = await _userService.CreateEmailToken(user);
+          var code = await _userService.CreateEmailTokenAsync(user);
           var callbackUrl = Url.Page(
               "/Account/ConfirmEmail",
               pageHandler: null,

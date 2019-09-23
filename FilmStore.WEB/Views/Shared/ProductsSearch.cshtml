@@ -38,7 +38,7 @@
         <div class="card-footer">
           <label style="float:left; width:50%">IMDb: @film.Rate</label>
           <label style="text-align:right; width:auto"><b>@film.Price$</b></label>
-          <input type="number" style="width:100px" value="1" min="1" max="100"/>
+          <input type="number" style="width:100px" value="1" min="1" max="100" class="amount"/>
           <a class="btn btn-primary" role="button" href="~/Order/AddToCart/@film.Id?count=1&returnUrl=@Context.Request.Host@Context.Request.Path">Add to cart</a>
         </div>
       </div>

@@ -5,8 +5,8 @@ namespace FilmStore.BLL.Interfaces
 {
   public interface IUserService
   {
-    Task<OperationDetails> Create(UserDTO userDto);
-    Task<string> CreateEmailToken(UserDTO userDTO);
+    Task<OperationDetails> CreateAsync(UserDTO userDto);
+    Task<string> CreateEmailTokenAsync(UserDTO userDTO);
     Task<string> GetUserIdAsync(UserDTO userDTO);
     Task<OperationDetails> EditUserAsync(UserDTO userDTO);
     Task<UserDTO> GetUserByNameAsync(string userName);
