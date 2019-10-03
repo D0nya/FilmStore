@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 
-namespace FilmStore.BLL.Infrastructure
+namespace FilmStore.WEB.Extensions
 {
   public static class SessionExtensions
   {

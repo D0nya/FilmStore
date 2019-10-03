@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace FilmStore.BLL.Services
 {
-  class NewsService : INewsService
+  public class NewsService : INewsService
   {
     IUnitOfWork Database { get; set; }
     public NewsService(IUnitOfWork db)

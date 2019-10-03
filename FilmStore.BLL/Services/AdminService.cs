@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace FilmStore.BLL.Services
 {
-  class AdminService : IAdminService
+  public class AdminService : IAdminService
   {
     IUnitOfWork Database { get; set; }
     public AdminService(IUnitOfWork db)

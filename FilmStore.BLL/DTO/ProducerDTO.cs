@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
+﻿using System.Collections.Generic;
 
 namespace FilmStore.BLL.DTO
 {
@@ -9,8 +7,6 @@ namespace FilmStore.BLL.DTO
     public int Id { get; set; }
     public string Name { get; set; }
 
-    [JsonIgnore]
-    [IgnoreDataMember]
     public List<FilmDTO> Films { get; set; }
   }
 }

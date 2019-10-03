@@ -1,7 +1,5 @@
 ﻿using FilmStore.DAL.Entities;
-using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
 
 namespace FilmStore.BLL.DTO
 {
@@ -16,24 +14,11 @@ namespace FilmStore.BLL.DTO
     public FilmStatus Status { get; set; }
     public int ProducerId { get; set; }
     public ProducerDTO Producer { get; set; }
-
-    [JsonIgnore]
-    [IgnoreDataMember]
     public List<int> CountriesId { get; set; }
-    [JsonIgnore]
-    [IgnoreDataMember]
     public List<CountryDTO> Countries { get; set; }
-    [JsonIgnore]
-    [IgnoreDataMember]
     public List<int> GenresId { get; set; }
-    [JsonIgnore]
-    [IgnoreDataMember]
     public List<GenreDTO> Genres { get; set; }
-    [JsonIgnore]
-    [IgnoreDataMember]
     public List<PurchaseDTO> Purchases { get; set; }
-    [JsonIgnore]
-    [IgnoreDataMember]
     public string ImagePath { get; set; }
   }
 }

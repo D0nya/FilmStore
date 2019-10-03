@@ -1,12 +1,14 @@
 ﻿using FilmStore.BLL.DTO;
 using FilmStore.BLL.Interfaces;
 using FilmStore.DAL.Entities;
+using FilmStore.WEB.Extensions;
 using FilmStore.WEB.Models;
 using FilmStore.WEB.Models.TableLogic;
 using FilmStore.WEB.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -33,11 +35,14 @@ namespace FilmStore.WEB.Controllers
     public IActionResult Cart()
     {
       decimal sum = 0;
-      IEnumerable<FilmDTO> films = _orderService.GetFilmsFromCart(HttpContext, "CartFilms");
+      IEnumerable<FilmViewModel> films = GetFilmsFromCart("CartFilms");
       if (films == null)
         return View(null);
 
-      IEnumerable<FilmDTO> filmsDistinct = films.GroupBy(film => film.Id).Select(group => group.FirstOrDefault());
+      IEnumerable<FilmViewModel> filmsDistinct = 
+        films.GroupBy(film => film.Id)
+        .Select(group => group.FirstOrDefault())
+        .OrderBy(f => f.Name);
       var mapper = MapperService.CreateFilmDTOToFilmViewModelMapper();
 
       ViewBag.FilmsDistinctAmount = new Dictionary<string, int>();
@@ -48,14 +53,15 @@ namespace FilmStore.WEB.Controllers
         ViewBag.FilmsDistinctAmount[film.Name] = films.Where(f => f.Id == film.Id).Count();
       ViewBag.Sum = sum;
 
-      var viewFilms = mapper.Map<IEnumerable<FilmDTO>, IEnumerable<FilmViewModel>>(filmsDistinct).OrderBy(f => f.Name);
-      return View(viewFilms);
+      return View(filmsDistinct);
     }
 
     public async Task<IActionResult> AddToCart(int id, [FromQuery]int count, [FromQuery]string returnUrl)
     {
-      FilmDTO film = await _orderService.GetFilmAsync(id);
-      List<FilmDTO> films = new List<FilmDTO>();
+      FilmDTO filmDTO = await _orderService.GetFilmAsync(id);
+      var mapper = MapperService.CreateFilmDTOToFilmViewModelMapper();
+      FilmViewModel film = mapper.Map<FilmDTO, FilmViewModel>(filmDTO);
+      List<FilmViewModel> films = new List<FilmViewModel>();
 
       if (returnUrl == null)
         returnUrl = "~/Home/Index";
@@ -65,7 +71,7 @@ namespace FilmStore.WEB.Controllers
         films.Add(film);
       }
 
-      _orderService.AddFilmsToCart(HttpContext, "CartFilms", films);
+      AddFilmsToCart("CartFilms", films);
       if (returnUrl.Contains("Cart"))
         return RedirectToAction("Cart");
       return Redirect(returnUrl);
@@ -73,7 +79,7 @@ namespace FilmStore.WEB.Controllers
 
     public IActionResult RemoveFromCart(int id, [FromQuery]bool first)
     {
-      _orderService.RemoveFromCart(HttpContext, "CartFilms", first, f => f.Id == id);
+      RemoveFilmFromCart("CartFilms", first, f => f.Id == id);
       return RedirectToAction("Cart");
     }
 
@@ -119,8 +125,40 @@ namespace FilmStore.WEB.Controllers
     public async Task<IActionResult> MakeOrder()
     {
       TempData["message"] = $"Your order has been sent for review.";
-      await _orderService.AddPurchaseAsync(HttpContext, "CartFilms");
+      IEnumerable<FilmViewModel> filmViewModels = GetFilmsFromCart("CartFilms");
+      var mapper = MapperService.CreateFilmViewModelToFilmDTOMapper();
+      IEnumerable<FilmDTO> filmDTOs = mapper.Map<IEnumerable<FilmViewModel>, IEnumerable<FilmDTO>>(filmViewModels);
+      await _orderService.AddPurchaseAsync(filmDTOs, HttpContext.User.Identity.Name);
+      HttpContext.Session.Clear();
       return RedirectToAction("Cart");
+    }
+
+    private IEnumerable<FilmViewModel> GetFilmsFromCart(string key)
+    {
+      var items = HttpContext.Session.Get<IEnumerable<FilmViewModel>>(key);
+      return items;
+    }
+    private void AddFilmsToCart(string key, IEnumerable<FilmViewModel> films)
+    {
+      List<FilmViewModel> res = new List<FilmViewModel>();
+      if (GetFilmsFromCart(key) != null)
+        res.AddRange(GetFilmsFromCart(key));
+      res.AddRange(films);
+      HttpContext.Session.Set(key, res);
+    }
+    private void RemoveFilmFromCart(string key, bool first, Predicate<FilmViewModel> predicate)
+    {
+      List<FilmViewModel> films = new List<FilmViewModel>();
+      if (GetFilmsFromCart(key) != null)
+        films = GetFilmsFromCart(key).ToList();
+      else
+        return;
+
+      if (first)
+        films.Remove(films.Where(new Func<FilmViewModel, bool>(predicate)).First());
+      else
+        films.RemoveAll(predicate);
+      HttpContext.Session.Set(key, films);
     }
   }
 }

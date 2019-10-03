@@ -3,13 +3,9 @@ using FilmStore.BLL.Infrastructure;
 using FilmStore.BLL.Interfaces;
 using FilmStore.DAL.Entities;
 using FilmStore.DAL.Interfaces;
-using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace FilmStore.BLL.Services
@@ -99,31 +95,27 @@ namespace FilmStore.BLL.Services
     public IEnumerable<PurchaseDTO> GetPurchases(int page = 0, int pageSize = 0, string searchString = null, string name = null)
     {
       var mapper = MapperService.CreateFilmToFilmDTOMapper();
-      IEnumerable<PurchaseDTO> purchases = 
-        mapper.Map<IEnumerable<Purchase>, IEnumerable<PurchaseDTO>>(Database.Purchases.GetAll());
+      IEnumerable<Purchase> purchases = Database.Purchases.GetAll();
+      IEnumerable<PurchaseDTO> purchasesDTO = 
+        mapper.Map<IEnumerable<Purchase>, IEnumerable<PurchaseDTO>>(purchases);
 
       if(name != null)
       {
         int userId = Database.Customers.Find(c => c.Name == name).First().Id;
-        purchases = purchases.Where(p => p.Customer.Id == userId);
+        purchasesDTO = purchasesDTO.Where(p => p.Customer.Id == userId);
       }
       if (searchString != null)
-        purchases = purchases.Where(f => f.Customer.Name.ToUpper().Contains(searchString.ToUpper()));
+        purchasesDTO = purchasesDTO.Where(f => f.Customer.Name.ToUpper().Contains(searchString.ToUpper()));
 
-      purchases = purchases.OrderByDescending(p => p.Date);
+      purchasesDTO = purchasesDTO.OrderByDescending(p => p.Date);
 
       if (page != 0 && pageSize != 0)
       {
-        var count = purchases.Count();
-        var items = purchases.Skip((page - 1) * pageSize).Take(pageSize);
+        var count = purchasesDTO.Count();
+        var items = purchasesDTO.Skip((page - 1) * pageSize).Take(pageSize);
         return items;
       }
-      return purchases;
-    }
-    public IEnumerable<FilmDTO> GetFilmsFromCart(HttpContext context, string key)
-    {
-      var items = context.Session.Get<IEnumerable<FilmDTO>>(key);
-      return items;
+      return purchasesDTO;
     }
 
     public async Task<FilmDTO> GetFilmAsync(int id)
@@ -135,12 +127,11 @@ namespace FilmStore.BLL.Services
       var filmDto = mapper.Map<Film, FilmDTO>(film);
       return filmDto;
     }
-    public async Task AddPurchaseAsync(HttpContext context, string key)
+    public async Task AddPurchaseAsync(IEnumerable<FilmDTO> filmDTOs, string userName)
     {
       List<FilmPurchase> films = new List<FilmPurchase>();
-      List<FilmDTO> filmDTOs = GetFilmsFromCart(context, key).ToList();
 
-      Customer customer = Database.Customers.Find(c => c.Name == context.User.Identity.Name).First();
+      Customer customer = Database.Customers.Find(c => c.Name == userName).First();
 
       Purchase purchase = new Purchase { Customer = customer, Date = DateTime.Now, Status = Status.Pending };
 
@@ -159,50 +150,15 @@ namespace FilmStore.BLL.Services
       await Database.Purchases.Create(purchase);
 
       await Database.SaveAsync();
-      context.Session.Clear();
     }
 
-    public MemoryStream GetPurchasesStream()
-    {
-      var mapper = MapperService.CreateFilmToFilmDTOMapper();
-      IEnumerable<PurchaseDTO> purchases =
-        mapper.Map<IEnumerable<Purchase>, IEnumerable<PurchaseDTO>>(Database.Purchases.GetAll());
-
-      string purchasesJson = JsonConvert.SerializeObject(purchases);
-      byte[] bytes = Encoding.ASCII.GetBytes(purchasesJson);
-      MemoryStream stream = new MemoryStream(bytes);
-        return stream;
-    }
     public int FilmsCount()
     {
-     return  Database.Films.GetAll().Count();
+      return  Database.Films.GetAll().Count();
     }
-
     public void Dispose()
     {
       Database.Dispose();
-    }
-    public void AddFilmsToCart(HttpContext context, string key, IEnumerable<FilmDTO> films)
-    {
-      List<FilmDTO> res = new List<FilmDTO>();
-      if (GetFilmsFromCart(context, key) != null)
-        res.AddRange(GetFilmsFromCart(context, key));
-      res.AddRange(films);
-      context.Session.Set(key, res);
-    }
-    public void RemoveFromCart(HttpContext context, string key, bool first, Predicate<FilmDTO> predicate)
-    {
-      List<FilmDTO> films = new List<FilmDTO>();
-      if (GetFilmsFromCart(context, key) != null)
-        films = GetFilmsFromCart(context, key).ToList();
-      else
-        return;
-
-      if (first)
-        films.Remove(films.Where(new Func<FilmDTO, bool>(predicate)).First());
-      else
-        films.RemoveAll(predicate);
-      context.Session.Set(key, films);
     }
   }
 }

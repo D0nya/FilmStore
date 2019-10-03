@@ -31,14 +31,15 @@ namespace FilmStore.BLL.Services
         await Database.UserManager.AddToRoleAsync(user, userDto.Role);
 
         Customer customer = new Customer { Name = userDto.UserName, UserRef = user.Id, Purchases = new List<Purchase>() };
-        await Database.ClientManager.Create(customer);
+        await Database.Customers.Create(customer);
+        await Database.SaveAsync();
 
         await Database.SignInManager.SignInAsync(user, isPersistent: false);
         return new OperationDetails(true, "Registration finished successfully", "");
       }
       else
       {
-        return new OperationDetails(false, "User with this login already exists", "Email");
+        return new OperationDetails(false, "User with this email already exists", "Email");
       }
     }
     public async Task<string> CreateEmailTokenAsync(UserDTO userDTO)

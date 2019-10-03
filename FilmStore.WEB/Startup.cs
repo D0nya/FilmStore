@@ -1,6 +1,4 @@
-﻿using FilmStore.WEB.Areas.Identity;
-using FilmStore.BLL.Infrastructure;
-using FilmStore.DAL.EF;
+﻿using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -9,7 +7,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
+using Microsoft.AspNetCore.Identity;
+using FilmStore.DAL.EF;
+using FilmStore.DAL.Entities;
+using FilmStore.DAL.Interfaces;
+using FilmStore.DAL.Repositories;
+using FilmStore.BLL.Interfaces;
+using FilmStore.BLL.Services;
+using FilmStore.WEB.Areas.Identity;
 
 namespace FilmStore.WEB
 {
@@ -35,11 +40,18 @@ namespace FilmStore.WEB
       string connection = Configuration.GetConnectionString("DefaultConnection");
       services.AddDbContext<FilmStoreContext>(options => options
       .UseSqlServer(connection)
-      .UseLazyLoadingProxies(), ServiceLifetime.Singleton);
+      .UseLazyLoadingProxies());
 
-      ServiceModule.Services = services; 
-      ServiceModule.Load();
-      
+      services.AddIdentity<User, IdentityRole>()
+        .AddEntityFrameworkStores<FilmStoreContext>()
+        .AddDefaultTokenProviders();
+
+      services.AddScoped<IUnitOfWork, EFUnitOfWork>();
+      services.AddScoped<IOrderService, OrderService>();
+      services.AddScoped<IUserService, UserService>();
+      services.AddScoped<IAdminService, AdminService>();
+      services.AddScoped<INewsService, NewsService>();
+
       services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
       .AddRazorPagesOptions(options =>
       {
@@ -61,7 +73,7 @@ namespace FilmStore.WEB
         options.IdleTimeout = TimeSpan.FromMinutes(120);
       });
 
-      services.AddSingleton<IEmailSender, EmailSender>();
+      services.AddScoped<IEmailSender, EmailSender>();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace FilmStore.WEB.Models
 {
@@ -11,7 +13,11 @@ namespace FilmStore.WEB.Models
     public string LastName { get; set; }
     public DateTime BirthDay { get; set; }
     public string UserRef { get; set; }
+    [JsonIgnore]
+    [IgnoreDataMember]
     public UserViewModel User { get; set; }
+    [JsonIgnore]
+    [IgnoreDataMember]
     public List<PurchaseViewModel> Purchases { get; set; }
   }
 }
