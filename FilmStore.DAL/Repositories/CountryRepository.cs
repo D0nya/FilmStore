@@ -4,7 +4,7 @@ using FilmStore.DAL.Entities;
 
 namespace FilmStore.DAL.Repositories
 {
-  class CountryRepository : GenericRepository<Country>
+  class CountryRepository : GenericRepository<Country>, ICountryRepository
   {
     public CountryRepository(FilmStoreContext context) : base(context)
     {

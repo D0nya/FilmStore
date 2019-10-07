@@ -7,14 +7,14 @@ namespace FilmStore.DAL.Interfaces
 {
   public interface IUnitOfWork : IDisposable
   {
-    IGenericRepository<Country> Countries { get; }
-    IGenericRepository<Customer> Customers { get; }
-    IGenericRepository<Film> Films { get; }
-    IGenericRepository<Genre> Genres { get; }
-    IGenericRepository<Producer> Producers { get; }
-    IGenericRepository<Purchase> Purchases { get; }
-    IGenericRepository<User> Users { get; }
-    IGenericRepository<News> News { get; }
+    ICountryRepository Countries { get; }
+    ICustomerRepository Customers { get; }
+    IFilmRepository Films { get; }
+    IGenreRepository Genres { get; }
+    IProducerRepository Producers { get; }
+    IPurchaseRepository Purchases { get; }
+    IUserRepository Users { get; }
+    INewsRepository News { get; }
 
     UserManager<User> UserManager { get; }
     RoleManager<IdentityRole> RoleManager { get; }

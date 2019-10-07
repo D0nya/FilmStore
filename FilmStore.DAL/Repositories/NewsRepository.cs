@@ -4,7 +4,7 @@ using FilmStore.DAL.Interfaces;
 
 namespace FilmStore.DAL.Repositories
 {
-  class NewsRepository : GenericRepository<News>
+  class NewsRepository : GenericRepository<News>, INewsRepository
   {
     public NewsRepository(FilmStoreContext context) : base(context)
     {

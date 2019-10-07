@@ -4,7 +4,7 @@ using FilmStore.DAL.Interfaces;
 
 namespace FilmStore.DAL.Repositories
 {
-  class UserRepository : GenericRepository<User>
+  class UserRepository : GenericRepository<User>, IUserRepository
   {
     public UserRepository(FilmStoreContext context) : base(context)
     {

@@ -4,7 +4,7 @@ using FilmStore.DAL.Entities;
 
 namespace FilmStore.DAL.Repositories
 {
-  class CustomerRepository : GenericRepository<Customer>
+  class CustomerRepository : GenericRepository<Customer>, ICustomerRepository
   {
     public CustomerRepository(FilmStoreContext context) : base(context)
     {

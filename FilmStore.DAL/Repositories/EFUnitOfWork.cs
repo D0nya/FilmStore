@@ -12,14 +12,14 @@ namespace FilmStore.DAL.Repositories
   {
     private readonly FilmStoreContext db;
 
-    private CountryRepository  countryRepository;
-    private CustomerRepository customerRepository;
-    private FilmRepository     filmRepository;
-    private GenreRepository    genreRepository;
-    private ProducerRepository producerRepository;
-    private PurchaseRepository purchaseRepository;
-    private UserRepository     userRepository;
-    private NewsRepository     newsRepository;
+    private ICountryRepository  countryRepository;
+    private ICustomerRepository customerRepository;
+    private IFilmRepository     filmRepository;
+    private IGenreRepository    genreRepository;
+    private IProducerRepository producerRepository;
+    private IPurchaseRepository purchaseRepository;
+    private IUserRepository     userRepository;
+    private INewsRepository     newsRepository;
 
     private readonly UserManager<User> userManager;
     private readonly RoleManager<IdentityRole> roleManager;
@@ -33,7 +33,7 @@ namespace FilmStore.DAL.Repositories
       this.signInManager = signInManager;
     }
 
-    public IGenericRepository<Country> Countries
+    public ICountryRepository Countries
     {
       get
       {
@@ -42,7 +42,7 @@ namespace FilmStore.DAL.Repositories
         return countryRepository;
       }
     }
-    public IGenericRepository<Customer> Customers
+    public ICustomerRepository Customers
     {
       get
       {
@@ -51,7 +51,7 @@ namespace FilmStore.DAL.Repositories
         return customerRepository;
       }
     }
-    public IGenericRepository<Film> Films
+    public IFilmRepository Films
     {
       get
       {
@@ -60,7 +60,7 @@ namespace FilmStore.DAL.Repositories
         return filmRepository;
       }
     }
-    public IGenericRepository<Genre> Genres
+    public IGenreRepository Genres
     {
       get
       {
@@ -69,7 +69,7 @@ namespace FilmStore.DAL.Repositories
         return genreRepository;
       }
     }
-    public IGenericRepository<Producer> Producers
+    public IProducerRepository Producers
     {
       get
       {
@@ -78,7 +78,7 @@ namespace FilmStore.DAL.Repositories
         return producerRepository;
       }
     }
-    public IGenericRepository<Purchase> Purchases
+    public IPurchaseRepository Purchases
     {
       get
       {
@@ -87,7 +87,7 @@ namespace FilmStore.DAL.Repositories
         return purchaseRepository;
       }
     }
-    public IGenericRepository<User> Users
+    public IUserRepository Users
     {
       get
       {
@@ -96,7 +96,7 @@ namespace FilmStore.DAL.Repositories
         return userRepository;
       }
     }
-    public IGenericRepository<News> News
+    public INewsRepository News
     {
       get
       {

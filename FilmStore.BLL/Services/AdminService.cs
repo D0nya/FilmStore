@@ -23,8 +23,9 @@ namespace FilmStore.BLL.Services
         cfg.CreateMap<Country, CountryDTO>()
         .ForMember(src => src.Films, opt => opt.Ignore());
       }).CreateMapper();
-      var countries = mapper.Map<IEnumerable<Country>, IEnumerable<CountryDTO>>(Database.Countries.GetAll());
-      return countries;
+      var countries = Database.Countries.GetAll();
+      var countryDTOs = mapper.Map<IEnumerable<Country>, IEnumerable<CountryDTO>>(countries);
+      return countryDTOs;
     }
     public IEnumerable<GenreDTO> GetGenres()
     {

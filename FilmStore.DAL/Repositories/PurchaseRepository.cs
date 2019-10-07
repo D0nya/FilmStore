@@ -4,7 +4,7 @@ using FilmStore.DAL.Interfaces;
 
 namespace FilmStore.DAL.Repositories
 {
-  class PurchaseRepository : GenericRepository<Purchase>
+  class PurchaseRepository : GenericRepository<Purchase>, IPurchaseRepository
   {
     public PurchaseRepository(FilmStoreContext context) : base(context)
     {

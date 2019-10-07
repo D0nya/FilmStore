@@ -4,7 +4,7 @@ using FilmStore.DAL.Interfaces;
 
 namespace FilmStore.DAL.Repositories
 {
-  class ProducerRepository : GenericRepository<Producer>
+  class ProducerRepository : GenericRepository<Producer>, IProducerRepository
   {
     public ProducerRepository(FilmStoreContext context) : base(context)
     {

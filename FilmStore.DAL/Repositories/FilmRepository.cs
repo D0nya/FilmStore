@@ -4,7 +4,7 @@ using FilmStore.DAL.Entities;
 
 namespace FilmStore.DAL.Repositories
 {
-  class FilmRepository : GenericRepository<Film>
+  class FilmRepository : GenericRepository<Film>, IFilmRepository
   {
     public FilmRepository(FilmStoreContext context) : base(context)
     {
